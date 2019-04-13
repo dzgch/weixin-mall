@@ -1,0 +1,169 @@
+@import './theme.less';
+
+@m-top-padding:30px;
+@m-bottom-padding:50px;
+
+*{
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+a:-webkit-any-link{
+    text-decoration: none;
+    color: #2d2d2d;
+  }
+
+// panel标题
+    .c-money-title{
+        font-size: 20px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 24px;
+        letter-spacing: 0px;
+        color: @theme-color;
+        margin-top:20px;
+        .c-money{
+            font-family: MicrosoftYaHei-Bold;
+            font-size: 38px;
+            letter-spacing: -1px;
+            font-weight:bold;
+        }
+    }
+    .c-title{
+        font-size: 28px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 24px;
+        letter-spacing: 0px;
+        color: #2d2d2d;
+    }
+
+.c-img-main{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background: center center no-repeat;
+    background-size: cover;
+}
+
+// 图文项样式
+
+.c-flexbox{
+    padding-top:@m-top-padding;
+    padding-bottom: @m-bottom-padding;
+    background-color:#fff;
+}
+.c-right{
+    text-align: right;
+}
+
+.c-left{
+    text-align: left;
+}
+.c-center{
+    text-align: center;
+}
+//划线
+.c-line {
+    &:before{
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 3px;
+        border-top: 3px solid #f0f0f0;
+        color: #f7f7f9;
+        -webkit-transform-origin: 0 0;
+        transform-origin: 0 0;
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+    }
+    &:after{
+        content: " ";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        height: 3px;
+        border-bottom: 3px solid #f0f0f0;
+        color: #f7f7f9;
+        -webkit-transform-origin: 0 0;
+        transform-origin: 0 0;
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+    }
+}
+// 清除分隔线
+.clear-line{
+    height:0;
+    border:none;
+}
+ // 修改placeholder字体
+ textarea::-webkit-input-placeholder,
+ input::-webkit-input-placeholder{
+      font-size: @input-font;
+     color: @placeholder-color;
+ }
+ textarea::-moz-placeholder,
+ input::-moz-placeholder{
+      font-size: @input-font;
+     color: @placeholder-color;
+ }
+ textarea:-moz-placeholder,
+ input:-moz-placeholder{
+      font-size:@input-font;
+     color: @placeholder-color;
+ }
+ textarea:-ms-input-placeholder,
+ input:-ms-input-placeholder{
+      font-size: @input-font;
+     color: @placeholder-color;
+ }
+
+//  筛选
+.hot-choose{
+    .vux-cell-bd.vux-cell-primary{
+        text-align: left;
+        font-size: 25px;
+        color:#000;
+        p{
+            margin:0;
+        }
+    }
+    .weui-cells{
+        margin:0;
+        min-height:80px;
+        line-height:80px;
+        &:after{
+            height:0;
+            border:none;
+        }
+        .weui-cell{
+            padding:0 30px;
+            
+        }
+        .weui-cell_access .weui-cell__ft:after{
+            height:14px;
+            width:14px;
+            border-color:#3c3c3c;
+            opacity: .7;
+        }
+        .weui-cell_access:active{
+            background-color: @bg-color;
+        }
+    }
+}
+// checked
+.weui-icon-circle{
+    color:#797979 !important;
+    font-size: 40px !important;
+}
+.vux-check-icon > .weui-icon-success:before, .vux-check-icon > .weui-icon-success-circle:before{
+    color:@theme-color !important;
+    font-size: 40px !important;
+}
+.vux-check-icon > span{
+    color:#444 !important;
+    font-size: 28px;
+}
