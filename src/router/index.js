@@ -13,11 +13,15 @@ import Order from '@/views/order.vue'//订单
 import Address from '@/views/address.vue'//收获地址
 import NewAddress from '@/views/newAddress.vue'//添加新收获地址
 import SureOrder from '@/views/sureorder.vue'//确认订单
+import SureOrderForCar from '@/views/sureorderForCar.vue'//购物车确认订单
 import SureLoan from '@/views/sureloan.vue'//确认租赁
 import InvitationCode from '@/views/invitation-code.vue'//邀请码
+import Goods from '@/views/goods.vue'//通用商品页
+import OrderDetails from '@/views/order-details.vue'//订单详情
+import OrderJudge from '@/views/order-judge.vue'//订单评价
+import cancelOrder from '@/views/cancel-order.vue'//取消订单原因
 
 Vue.use(Router)
-console.log(Home)
 export default new Router({
   mode: 'history',
   routes: [
@@ -123,8 +127,8 @@ export default new Router({
       }
     },
     {
-      path: '/address/newaddress',
-      name: 'newAddress',
+      path: '/newaddress',
+      name: 'newaddress',
       component: NewAddress,
       meta: {
         index: 2,
@@ -133,7 +137,7 @@ export default new Router({
     },
     {
       path: '/sureorder',
-      name: 'sureOrder',
+      name: 'sureorder',
       component: SureOrder,
       meta: {
         index: 2,
@@ -141,8 +145,17 @@ export default new Router({
       }
     },
     {
+      path: '/sureorderforcar',
+      name: 'sureorderforcar',
+      component: SureOrderForCar,
+      meta: {
+        index: 2,
+        showFooter: false
+      }
+    },
+    {
       path: '/sureloan',
-      name: 'sureLoan',
+      name: 'sureloan',
       component: SureLoan,
       meta: {
         index: 2,
@@ -153,6 +166,42 @@ export default new Router({
       path: '/invitation_code',
       name: 'invitation_code',
       component: InvitationCode,
+      meta: {
+        index: 0,
+        showFooter: false
+      }
+    },
+    {
+      path: '/goods',
+      name: 'goods',
+      component: Goods,
+      meta: {
+        index: 0,
+        showFooter: false
+      }
+    },
+    {
+      path: '/order-details',
+      name: 'order_details',
+      component: OrderDetails,
+      meta: {
+        index: 0,
+        showFooter: false
+      }
+    },
+    {
+      path: '/order-judge',
+      name: 'order_judge',
+      component: OrderJudge,
+      meta: {
+        index: 0,
+        showFooter: false
+      }
+    },
+    {
+      path: '/cancel-order',
+      name: 'cancel_order',
+      component: cancelOrder,
       meta: {
         index: 0,
         showFooter: false

@@ -1,9 +1,9 @@
 <template>
     <div class="hot-choose">
         <div class="c-money-range"><span class="c-label">价格区间</span>
-            <input type="text" class="c-input-hot">
+            <input type="text" class="c-input-hot" v-model="price">
             <div class="c-l"></div>
-            <input  type="text" class="c-input-hot"/>
+            <input  type="text" class="c-input-hot" v-model="price1"/>
         </div>
         <group>
             <cell
@@ -14,20 +14,20 @@
             @click.native="showContent = !showContent"></cell>
 
             <div class="slide" :class="showContent?'animate':''">
-                <checker v-model="checkValue" type="checkbox" default-item-class="default-item" selected-item-class="selected-item">
-                    <checker-item v-for="(v,k) in dzjxlist" :key="k" :value="k">{{ v }}</checker-item>
+                <checker v-model="checkValue" type="checkbox" @on-change="onChange" default-item-class="default-item" selected-item-class="selected-item">
+                    <checker-item :value="item" v-for="(item, index) in dzjxlist" :key="index">{{item.classStr}}</checker-item>
                 </checker>
             </div>
             <cell
-            title="园林农药"
+            title="园林药剂"
             is-link
             :border-intent="false"
             :arrow-direction="showContent1 ? 'up' : 'down'"
             @click.native="showContent1 = !showContent1"></cell>
 
             <div class="slide" :class="showContent1?'animate':''">
-                <checker v-model="checkValue" type="checkbox" default-item-class="default-item" selected-item-class="selected-item">
-                    <checker-item v-for="(v,k) in dzjxlist" :key="k" :value="k">{{ v }}</checker-item>
+                <checker v-model="checkValue1" type="checkbox" default-item-class="default-item" selected-item-class="selected-item">
+                    <checker-item :value="item" v-for="(item, index) in dzjxlist1" :key="index">{{item.classStr}}</checker-item>
                 </checker>
             </div>
         </group>
@@ -37,6 +37,7 @@
 
 <script>
 import { Cell, CellBox, CellFormPreview, Group, Badge ,Checker, CheckerItem} from 'vux'
+import { mapActions } from 'vuex';
 export default {
     name:"hotChoose",
     components:{
@@ -48,17 +49,53 @@ export default {
         Checker, CheckerItem
     },
     props:{
-        checkValue:{
-            default:()=>([1])
         },
-        dzjxlist:{
-            default:()=>(["绿篱机","打草机","一体机","造型机"])
-        }
-    },
     data(){
         return {
-            showContent: false,
-            showContent1: false
+            dzjxlist:[],
+            dzjxlist1:[],
+            showContent: true,
+            showContent1: true,
+            checkValue:[],
+            checkValue1:[],
+            price:'',
+            price1:''
+        }
+    },
+    mounted(){
+        this.getClass()
+    },
+    methods:{
+        ...mapActions([
+            'getclasslist',
+            'getselect'
+        ]),
+        getClass(){
+            this.getclasslist().then(res=>{
+                this.dzjxlist=res.mechanical//机械mechanical
+                this.dzjxlist1=res.agentia//药剂
+            })
+        },
+        reset(){
+            this.checkValue=[]
+            this.checkValue1=[]
+        },
+        onChange(val){
+            console.log(this.checkValue)
+        },
+        selectByType(){
+            let string=[],string1=[],data=[]
+            string=this.checkValue.map(val=>{ return val.classId })
+            string1=this.checkValue1.map(val=>{ return val.classId })
+            data=[...string,...string1]
+            let price=this.price+"!"+this.price1
+            if(data.length>0||price.length>1){
+                this.getselect({one:data.join("!"),two:price}).then(res=>{
+                    this.$emit("on-chooseData",res)
+                })
+            }else{
+                this.$emit("on-chooseData")
+            }
         }
     }
 }

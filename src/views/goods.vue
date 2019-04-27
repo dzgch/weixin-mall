@@ -5,17 +5,17 @@
       </header-c>
     </div>
     <div class="mall-top">
+      <div class="mall-search">
       <search-c  @on-data="getSearchData" @on-all-data="getSearchAll"></search-c>
-      <content-title :title="title"></content-title>
-      <swiper-c class="new-swiper-c" :swiper_list="lunboList"></swiper-c>
+      </div>
       <hot-p-x  @on-getDataByType="getDataByType"></hot-p-x>
     </div>
     <div class="mall-cell">
       <flexbox orient="vertical" :gutter="0" wrap="wrap">
-        <flexbox-item v-for="(k,i) in goodsListT" :key="i" class="c-mall-goods-p">
+        <flexbox-item v-for="(k,i) in goodsList" :key="i" class="c-mall-goods-p">
           <panel-for-coll :goodsList="k"></panel-for-coll>
         </flexbox-item>
-         <div class="tip-nomessage" v-show="goodsListT.length<1">
+        <div class="tip-nomessage" v-show="goodsList.length<1">
           暂无数据
         </div>
       </flexbox>
@@ -32,7 +32,7 @@ import ContentTitle from '@/components/basic/contentTitle'
 import HotPX from '@/components/hotGoods/hotPX'
 import { mapActions } from 'vuex';
 export default {
-    name:"new",
+    name:"goods",
     components:{
       Flexbox, 
       FlexboxItem,
@@ -45,40 +45,48 @@ export default {
     },
     data(){
         return {
-          title:"新品上市",
-          headerTitle:"新品",
-          goodsListT:[],
-          lunboList:[]
+          headerTitle:"",
+          goodsList:[]
         }
     },
     mounted(){
-        this.getShopData()
+      console.log(this.$route.query)
+  this.getShopData()
     },
     methods: {
-      ...mapActions(['getnewshop']),
-      getSearchData(data){
-        this.goodsListT=data
+      ...mapActions([
+        'getselectcommodity',
+        'getmechanical',
+        'getmedicament'
+        ]),
+         getDataByType(val){
+        this.goodsList=val
       },
-       getDataByType(val){
-        this.goodsListT=val
+      getSearchData(data){
+        this.goodsList=data
       },
       getSearchAll(){
         this.getShopData()
       },
       getShopData(){
-      this.getnewshop().then(res=>{
-        let pic=res.pic
-        for(var i=0;i<pic.length;i++){
-          this.lunboList.push({
-              url: 'javascript:',
-              img: pic[i],
-              title: '',
-              fallbackImg: require("@/assets/images/首页banner.png")
+              if(this.$route.query.type==1){
+          this.headerTitle="全部商品"
+          this.getselectcommodity().then(res=>{
+            this.goodsList=res.commodity
           })
-        }
-        let commodityList=res.commodity
-        this.goodsListT=commodityList
-      })
+      }
+      if(this.$route.query.type==2){
+          this.headerTitle="电动机械"
+          this.getmechanical().then(res=>{
+            this.goodsList=[...res]
+          })
+      }
+      if(this.$route.query.type==3){
+          this.headerTitle="园林药剂"
+          this.getmedicament().then(res=>{
+            this.goodsList=[...res]
+          })
+      }
       }
     }
 }
@@ -87,13 +95,10 @@ export default {
 .new{
   .mall-top{
      background-color: @bg-color;
+     .mall-search{
+       height:80px;
+     }
   }
-  .tip-nomessage{
-   height:200px;
-   line-height:200px;
-   text-align: center;
-   width:100%
- }
  .mall-grid-c{
    .weui-grid__icon{
      width:108px;

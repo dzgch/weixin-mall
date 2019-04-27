@@ -1,13 +1,14 @@
 <template>
     <div class="order-pay-msg">
         <form-preview :header-label="headerLabel" :body-items="list"></form-preview>
-        <div class="order-status">实付金额： ￥{{ order_status}}</div>
+        <div class="order-status">实付金额： ￥{{ (Number(this.orderDetails.payMoney)).toFixed(2)}}</div>
     </div>
 </template>
 <script>
 
 import { FormPreview,Flexbox, FlexboxItem  } from 'vux'
-
+import { mapGetters, mapState } from 'vuex';
+let staList=['交易已取消','等待您的支付','已支付','待发货','待收货','待评价','交易完成']
 export default {
     name:"orderPayMsg",
     components:{
@@ -16,27 +17,38 @@ export default {
         FlexboxItem 
     },
     props:{
-        orderNum:{
-            default:"123123123123123"
-        },
-        orderTime:{
-            default:"2019/2/2 20:00"
-        }
+          orderDetails:Object
     },
     data(){
         return {
-            list: [{
-                label: '商品总额',
-                value: '￥12.00'
-            }, {
-                label: '运费',
-                value: '+￥0'
-            }, {
-                label: '交易状态',
-                value: '-￥0'
-            }],
             headerLabel:"支付信息",
-            order_status:"22.00"
+            statusList:staList
+        }
+    },
+    mounted(){
+        console.log(this.orderDetails.totalPrice)
+    },
+    computed:{
+        ...mapGetters([
+            'getOrderState'
+        ]),
+        list(){
+            
+        let state=this.statusList[this.orderDetails.status]
+            return [
+            {
+                label: '商品总额',
+                value: '￥'+ (Number(this.orderDetails.totalPrice).toFixed(2))
+            },
+            //  {
+            //     label: '运费',
+            //     value: '+￥'+(Number(this.orderDetails.freight)).toFixed(2)
+            // },
+             {
+                label: '交易状态',
+                value: state
+            }
+        ]
         }
     }
 }

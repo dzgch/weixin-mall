@@ -1,22 +1,50 @@
 <template>
-    <div>
+    <div class="panel-s-t">
         <flexbox :gutter="gutter" :orient="orient" class="c-flexbox">
             <flexbox-item>
-            <div class="c-img-main" :style="{backgroundImage:'url('+goodsList.img_url+')'}">
+                <!-- 商品图 -->
+            <div  @click="clickToDetails" class="c-img-main" :style="{backgroundImage:'url('+goodsList.picurl+')'}">
                 
             </div>
             </flexbox-item>
             <flexbox-item>
-                <flexbox :orient="orient">
+                <flexbox :orient="orient" :gutter="0">
                     <flexbox-item>
-                        <div class="c-content">
-                            <div class="c-title">{{ goodsList.title }}</div>
-                            <div class="c-money-title">{{ sign }}<span class="c-money">{{ goodsList.money }}</span>&nbsp;/起</div>
-                        </div>
+                        <!-- 商品内容 -->
+                        <div class="c-content"  @click="clickToDetails">
+                            <div class="c-title">{{ goodsList.name }}</div>
+                            <template v-if="isBuy&&!isLoan">
+                                <div class="c-money-title-rent">
+                                </div>
+                                <div class="c-money-title">
+                                        <span>购买：{{ sign }}<span class="c-money">{{ (Number(goodsList.price)).toFixed(2)}}</span>/起
+                                        </span>
+                                    </div>
+                            </template>
+                            <template v-else-if="isLoan&&!isBuy">
+                                <div class="c-money-title">
+                                </div>
+                                    <div class="c-money-title-rent">
+                                        <span >租赁：{{ sign }}<span class="c-money">{{ (Number(goodsList.rentPrice)).toFixed(2)}}</span>/起
+                                        </span>
+                                    </div>
+                            </template>
+                            <template v-else-if="isLoan&&isBuy">
+                                <div class="c-money-title">
+                                    <span >购买：{{ sign }}<span class="c-money">{{ (Number(goodsList.price)).toFixed(2)}}</span>/起
+                                    </span>
+                                </div>
+                                <div class="c-money-title-rent">
+                                <span> 租赁：{{ sign }}<span class="c-money">{{ (Number(goodsList.rentPrice)).toFixed(2)}}</span>/起
+                                </span>
+                                </div>
+                            </template>
+                         </div>
                     </flexbox-item>
+                    <!-- 按钮操作 -->
                     <flexbox-item class="c-left">
-                        <button-c-l :type="btn_buy_type" :text="btn_buy_text" :style="style"></button-c-l>
-                        <button-c-l :type="btn_borrow_type" :text="btn_borrow_text" :style="style"></button-c-l>
+                        <button-by-buy  v-show="isBuy" :goodsList="goodsList"></button-by-buy>
+                        <button-by-loan v-show="isLoan" :goodsList="goodsList"></button-by-loan>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
@@ -28,21 +56,24 @@
 // 首页小图文
 import { Flexbox, FlexboxItem } from 'vux'
 import ButtonCL from '@/components/basic/buttonCL.vue'
+import ButtonByLoan from '@/components/basic/buttonByLoan.vue'
+import ButtonByBuy from '@/components/basic/buttonByBuy.vue'
+import LoadAlert from '@/components/dialog/loanAlert.vue'
+import { mapState } from 'vuex'
+import { isString } from 'util';
 
 export default {
     name:"PanelST",
     components:{ 
         Flexbox,
         FlexboxItem,
-        ButtonCL
+        ButtonCL,
+        LoadAlert,
+        ButtonByLoan,
+        ButtonByBuy
     },
     data(){
         return {
-            btn_buy_type: 'primary',
-            btn_borrow_type:'warn',
-            btn_buy_text:'立即购买',
-            btn_borrow_text:'租赁',
-            style:{}
         }
     },
     props:{
@@ -57,26 +88,53 @@ export default {
         },
         goodsList:{
             default:()=>({
-                img_url:require("@_a/images/首页banner.png"),
-                title:"ELBE锂电采茶机",
-                money:1233
+                picurl:require("@_a/images/首页banner.png"),
+                name:"ELBE锂电采茶机",
+                price:1233
             })
         },
         sign:{
             default:"￥"
         }
+    },
+    mounted(){
+        console.log(this.goodsList)
+    },
+    methods:{
+        clickToDetails(){
+            this.$router.push({
+                path:this.$store.state.goodsDetailsPath,
+                query:{
+                    id:this.goodsList.id
+                }
+            })
+        }
+    },
+    computed:{
+        ...mapState(['showToast']),
+        isLoan(){
+            return this.goodsList.type==3||this.goodsList.type==1
+        },
+        isBuy(){
+            return this.goodsList.type==3||this.goodsList.type==2
+        }
     }
-    
 }
 </script>
 
 <style lang="less" scoped>
 @import '~vux/src/styles/1px.less';
+.panel-s-t{
 .c-img-main{
     height:230px;
     border-radius: 4px;
 }
 .c-flexbox{
     padding-top:0;
+   
 }
+
+
+}
+
 </style>

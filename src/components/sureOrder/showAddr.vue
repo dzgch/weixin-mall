@@ -3,9 +3,9 @@
         <flexbox :gutter="0" orient="horizontal" align="end">
             <flexbox-item :span="1/5" style="position:relative">
                 <div class="c-name">
-                    <span class="c-name-span">{{ name }}</span>
+                    <span class="c-name-span">{{ addrList.username }}</span>
                 </div>
-                <div class="c-moren">
+                <div class="c-moren" v-show="addrList.main">
                     <div class="c-moren-show">默认</div>
                 </div>
             </flexbox-item>
@@ -14,17 +14,17 @@
                     <flexbox-item class="c-left">
                         <flexbox  orient="horizontal" :gutter="0">
                             <flexbox-item class="c-left" :span="3/4">
-                                <div class="c-phone"> {{ phone }}</div>
+                                <div class="c-phone"> {{ addrList.phone }}</div>
                             </flexbox-item>
                             <flexbox-item class="c-right" :span="1/4">
-                                <div class="c-update">
+                                <div class="c-update" @click="chooseAddr">
                                     <i class="iconfont iconweibiaoti2010104"></i><span>修改</span>
                                 </div>
                             </flexbox-item>
                         </flexbox>
                     </flexbox-item>
                     <flexbox-item class="c-left">
-                        <div class="c-addr">{{ address }}</div>
+                        <div class="c-addr">{{ addrList.addr }}</div>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
@@ -41,22 +41,21 @@ export default {
          FlexboxItem   
     },
     props:{
-        name:{
-            default:"XXX"
-        },
-        isMoren:{
-            default:true
-        },
-        address:{
-            default:"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-        },
-        phone:{
-            default:"133333333333"
-        },
+        addrList:Object
     },
     data(){
         return {
 
+        }
+    },
+    methods:{
+        chooseAddr(){
+            this.$router.push({
+                name:this.$store.state.addressName,
+                query:{
+                    isChoose:true
+                }
+            })
         }
     }
 }
@@ -79,7 +78,7 @@ export default {
     }
     .c-moren{
         width: 64px;
-        height: 34px;
+        height: 40px;
         border: solid 2px #fd4141;
         text-align: center;
         .c-moren-show{

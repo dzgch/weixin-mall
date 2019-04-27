@@ -2,19 +2,20 @@
     <div class="panel-for-hot">
         <flexbox :gutter="0" orient="horizontal" class="c-line">
             <flexbox-item :span="4/10">
-            <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+            <div class="c-img-main" :style="{backgroundImage:'url('+goodsList.picurl+')'}">
             </div>
             </flexbox-item>
             <flexbox-item :span="6/10">
                 <flexbox orient="vertical" class="c-flexbox-hot">
                     <flexbox-item>
                         <div class="c-content">
-                            <div class="c-title">{{ title }}</div>
-                            <div class="c-money-title">￥<span class="c-money">{{ money }}</span>&nbsp;/起</div>
+                            <div class="c-title">{{ goodsList.name }}</div>
+                            <div class="c-money-title">￥<span class="c-money">{{ (Number(goodsList.price)).toFixed(2) }}</span>&nbsp;/起</div>
                         </div>
                     </flexbox-item>
                     <flexbox-item class="c-left c-flexhot-footer">
-                        <button-c :type="btn_buy_type" :text="btn_buy_text" :style="style"></button-c>
+                                <button-by-buy  v-show="goodsList.type==3||goodsList.type==2"  :goodsList="k"></button-by-buy>
+                                <button-by-loan v-show="goodsList.type==3||goodsList.type==1" :goodsList="k"></button-by-loan>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
@@ -26,13 +27,14 @@
 // 热卖图文
 import { Flexbox, FlexboxItem } from 'vux'
 import ButtonC from '@/components/basic/buttonCL.vue'
-
+import ButtonByBuy from '@/components/basic/buttonByBuy'
 export default {
     name:"PanelForHot",
     components:{ 
         Flexbox,
         FlexboxItem,
-        ButtonC
+        ButtonC,
+        ButtonByBuy
     },
     data(){
         return {
@@ -42,15 +44,8 @@ export default {
         }
     },
     props:{
-        
-        img_url:{
-            default:require("@_a/images/首页banner.png")
-        },
-        title:{
-            default:"ELBE锂电采茶机"
-        },
-        money:{
-            default:1233
+        goodsList:{
+            type:[Object,Array]
         }
     }
     

@@ -6,7 +6,7 @@ const state = {
 
 const actions = {
   getHomeList ({ commit }, p) {
-    p={userToken:'5O1555149719311'}
+    p={userToken:getToken()}
     return new Promise((resolve, reject) => {
       getHome(p).then(res => {
         const data = res.data
@@ -16,7 +16,8 @@ const actions = {
       })
     })
   },
-  getmechanical ({ commit }, p) {
+  // 获取电动机械
+  getmechanical ({ commit },  p={userToken:getToken()}) {
     return new Promise((resolve, reject) => {
       mechanical(p).then(res => {
         const data = res.data
@@ -26,7 +27,8 @@ const actions = {
       })
     })
   },
-  getmedicament ({ commit }, p) {
+  // 获取园林药剂
+  getmedicament ({ commit },  p={userToken:getToken()}) {
     return new Promise((resolve, reject) => {
       medicament(p).then(res => {
         const data = res.data
@@ -36,6 +38,7 @@ const actions = {
       })
     })
   },
+  // 获取技术支持
   gettechnical ({ commit }, p) {
     return new Promise((resolve, reject) => {
       technical(p).then(res => {
@@ -46,6 +49,7 @@ const actions = {
       })
     })
   },
+  // 获取关于我们
   getabouts ({ commit }, p) {
     return new Promise((resolve, reject) => {
       abouts(p).then(res => {

@@ -4,7 +4,7 @@
             <flexbox-item>
                 <a @click="clickZongh" :class="{click:isClickZong}">综合</a>
             </flexbox-item>
-            <flexbox-item>
+            <!-- <flexbox-item>
                 <a style="position:relative;top:3px;"  @click="clickPrice">价格
                     <div class="hot-line">
                         <i class="iconfont iconshangjiantou1" :class="isClick?'click':''"></i>
@@ -13,13 +13,13 @@
             </flexbox-item>
             <flexbox-item >
                 <a @click="clickXiaol" :class="{click:isClickXiao}">销量</a>
-            </flexbox-item>
+            </flexbox-item> -->
             <flexbox-item >
                  <a @click="clickShow">筛选<i class="iconfont iconshaixuan"></i></a>
             </flexbox-item>
         </flexbox>
-        <hot-choose v-show="isShowChoose">
-            <hot-submit slot="chooseBtn"></hot-submit>
+        <hot-choose v-show="isShowChoose" ref="choose" @on-chooseData="chooseData">
+            <hot-submit slot="chooseBtn" @on-reset="getReset" @on-select="getDataType"></hot-submit>
         </hot-choose>
     </div>
 </template>
@@ -62,6 +62,17 @@ export default {
         },
         clickShow(){
             this.isShowChoose=!this.isShowChoose
+        },
+        getReset(){
+            this.$refs.choose.reset()
+        },
+        getDataType(){
+            this.$refs.choose.selectByType()
+        },
+        chooseData(val){
+            this.clickShow()
+            if(val)
+            this.$emit("on-getDataByType",val)
         }
     }
 }

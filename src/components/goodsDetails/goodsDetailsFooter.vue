@@ -3,14 +3,20 @@
         <flexbox  orient="horizontal" :gutter="0" class="c-goods-flexbox">
             <flexbox-item class="c-center" :span="4/14">
                 <grid :show-lr-borders="false" :show-vertical-dividers="false" :cols="3">
-                    <grid-item  v-for="i in gridList" :key="i.label" :label="i.label" :link="i.link">
-                        <i slot="icon" :class="i.img"></i>
+                    <grid-item label="首页" link="/">
+                        <i slot="icon" class="iconfont iconshouye"></i>
+                    </grid-item>
+                     <!-- <grid-item label="客服" link="/">
+                        <i slot="icon" class="iconfont iconkefu"></i>
+                    </grid-item> -->
+                     <grid-item label="收藏">
+                        <i slot="icon" class="iconfont icontubiao_wuxing-" :class="collect?'collected':''" @click="addCollect"></i>
                     </grid-item>
                 </grid>
             </flexbox-item>
             <flexbox-item class="c-center" :span="10/14">
-                <div class="c-to-car"><x-button  class="c-btn" type="default" text="加入购物车" :mini="true" :link="link"></x-button></div>
-                <div class="c-to-buy"><x-button @click.native="clickBuy" class="c-btn1" type="default" text="立即购买" :mini="true" :link="link"></x-button></div>
+                <div class="c-to-car"><x-button @click.native="addCar" class="c-btn" type="default" text="加入购物车" :mini="true"></x-button></div>
+                <div class="c-to-buy"><x-button @click.native="clickBuy" class="c-btn1" type="default" text="立即购买" :mini="true"></x-button></div>
             </flexbox-item>
         </flexbox>
     </div>
@@ -18,23 +24,7 @@
 
 <script>
 import { Flexbox, FlexboxItem,XButton,Grid ,GridItem } from 'vux'
-const baseList=[
-    {
-        link:'/',
-        label:"首页",
-        img:["iconfont","iconshouye"]
-    },
-    {
-        link:'/',
-        label:"客服",
-        img:["iconfont","iconkefu"]
-    },
-    {
-        link:'/',
-        label:"收藏",
-        img:["iconfont","icontubiao_wuxing-"]
-    }
-]
+import { mapActions, mapState } from 'vuex';
 export default {
     name:"goodsDetailFooter",
     components:{
@@ -44,23 +34,53 @@ export default {
         Grid ,GridItem
     },
     props:{
-        link:{
-            default:""
+        collected:{
+            type:[Boolean,String]
         },
-        money:{
-            default:"108"
-        }
+        goodsDetails:Object
     },
     data(){
         return {
-            gridList:baseList
+            collect:this.collected
         }
     },
+    computed:{
+    },
+    mounted(){
+    },
     methods:{
+        ...mapActions([
+            'getcollectAdd',
+            'getshopcarAdd'
+        ]),
+        // 立即购买
         clickBuy(){
             console.log(this.$router);
             this.$router.push({
-                path:"/sureorder"
+                path:"/sureorder",
+                query:{
+                    id:this.goodsDetails.id
+                }
+            })
+        },
+        // 加入收藏
+        addCollect(){
+            this.getcollectAdd({commodityid:this.goodsDetails.id}).then(res=>{
+                this.collect=!this.collect
+                this.$vux.toast.show({
+                text: '添加成功',
+                type:"text",
+                time:2000
+            })
+            })
+        },
+        addCar(){
+            this.getshopcarAdd({commodityid:this.goodsDetails.id}).then(res=>{
+                this.$vux.toast.show({
+                text: '添加成功',
+                type:"text",
+                time:2000
+            })
             })
         }
     }
@@ -87,17 +107,13 @@ export default {
         height:0;
         border:none;
     }
-    .c-all-money{
-            font-size: 30px;
-        color: @c_333;
-        padding-left:25px;
-        .c-money{
-            color:#fe4646;
-        }
-    }
+    
     .iconfont{
         font-size: 37px;
         color: #666666;
+        &.collected{
+        color:@theme-color;
+    }
     }
     .weui-grid__icon{
         height: 45px;

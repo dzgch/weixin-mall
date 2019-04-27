@@ -57,7 +57,7 @@ export default {
 .header{
     height:90px;
     .iconfont{
-        font-size: 32px;
+        font-size: 55px;
     }
     .vux-header{
         padding:25px 0 25px;
@@ -66,11 +66,12 @@ export default {
         
         font-size:32px;
     }
-    .vux-header .vux-header-left, .vux-header .vux-header-right{
+    .vux-header .vux-header-left{
         padding:20px 0px 25px;
-        font-size: 32px;
+        font-size: 55px;
     }
     .vux-header .vux-header-right{
+        font-size: 35px;
         line-height: 32px;
         padding:15px 10px 0 0;
     }

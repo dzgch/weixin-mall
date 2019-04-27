@@ -1,5 +1,5 @@
 <template>
-    <div class="order-tag c-sticky c-line" >
+    <div class="type-tag c-sticky c-line" >
         <!-- <sticky scroll-box="vux_view_box_body" :disabled="disabled" :offset="offset" :check-sticky-support="false" class="c-sticky"> -->
             <tab :line-width=3>
                 <tab-item :selected="demo == index" v-for="(item, index) in list" @on-item-click="showTag" @click="demo = index" :key="index">{{item}}</tab-item>
@@ -38,15 +38,15 @@ export default {
     
     methods:{
         showTag(index){
-            this.$store.commit("updateOrderTagType",index);
+            this.$store.commit("updateTypeTagType",index);
         }
     }
 }
 </script>
 
 <style lang="less">
-.order-tag{
-    @height:90px;
+.type-tag{
+    @height:75px;
     background-color: @bg-color;
     position: relative;
     height:@height;
@@ -62,7 +62,6 @@ export default {
         // top:80px !important;
         
         height:@height;
-       background-color: @bg-color;
         .vux-tab-container{
             height:@height;
             .vux-tab{
@@ -75,6 +74,9 @@ export default {
                 }
                 .vux-tab-item.vux-tab-selected{
                     color: @theme-color;
+                }
+                .vux-tab-ink-bar{
+                    background-color: unset;
                 }
             }
         }

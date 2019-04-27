@@ -1,7 +1,7 @@
 <template>
 <div class="myself">
     <div class="myself-top">
-      <center-top></center-top>
+      <center-top :img_url="$store.state.wx.heatimgurl" :name="$store.state.wx.username" ></center-top>
     </div>
     <div class="myself-cell">
       <center-cell :list="linkList" :moneyLink="moneyLink"></center-cell>
@@ -23,6 +23,7 @@ export default {
     },
     data(){
         return {
+          
         }
     },
     created(){

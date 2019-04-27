@@ -2,10 +2,10 @@
     <div class="sure-submit">
         <flexbox  orient="horizontal" :gutter="0">
             <flexbox-item class="c-center c-bg" >
-                <div class="c-all-money">实付金额： <span class="c-money">￥{{ money }}</span></div>
+                <div class="c-all-money">实付金额： <span class="c-money">￥{{ (Number(price)).toFixed(2)}}</span></div>
             </flexbox-item>
             <flexbox-item class="c-center">
-                <x-button  class="c-btn" type="default" text="提交订单" :mini="true" :link="link"></x-button>
+                <x-button @click.native="clickToBuy" class="c-btn" type="default" text="提交订单" :mini="true" :link="link"></x-button>
             </flexbox-item>
         </flexbox>
     </div>
@@ -24,13 +24,18 @@ export default {
         link:{
             default:""
         },
-        money:{
-            default:"108"
-        }
+        price:{
+            default:"0"
+        },
     },
     data(){
         return {
             
+        }
+    },
+    methods:{
+        clickToBuy(){
+            this.$emit("on-clicktobuy")
         }
     }
 }

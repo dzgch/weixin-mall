@@ -2,10 +2,10 @@
     <div class="sure-submit">
         <flexbox  orient="horizontal" :gutter="0">
             <flexbox-item class="c-center c-bg" >
-                <x-button  class="c-btn" type="default" text="重置" :mini="true" :link="link"></x-button>
+                <x-button  class="c-btn" type="default" @click.native="reset" text="重置" :mini="true"></x-button>
             </flexbox-item>
             <flexbox-item class="c-center">
-                <x-button  class="c-btn1" type="default" text="确认" :mini="true" :link="link"></x-button>
+                <x-button  class="c-btn1" type="default" @click.native="sendSelect" text="确认" :mini="true" ></x-button>
             </flexbox-item>
         </flexbox>
     </div>
@@ -13,6 +13,7 @@
 
 <script>
 import { Flexbox, FlexboxItem,XButton } from 'vux'
+import { mapActions } from 'vuex';
 export default {
     name:"hotSubmit",
     components:{
@@ -20,17 +21,13 @@ export default {
         FlexboxItem,
         XButton
     },
-    props:{
-        link:{
-            default:""
+    methods:{
+        
+        sendSelect(){
+            this.$emit("on-select")
         },
-        money:{
-            default:"108"
-        }
-    },
-    data(){
-        return {
-            
+        reset(){
+            this.$emit("on-reset")
         }
     }
 }

@@ -29,7 +29,9 @@ export default {
         ButtonL
     },
     props:{
-        
+        goodsMsg:{
+            type:Object
+        },
         money:{
             default:"0"
         }
@@ -43,7 +45,8 @@ export default {
             this.$store.commit("updateShowToast",false)
         },
         clickToLoan(){
-            this.$router.push({path:'/sureloan'})
+            this.$router.push({name:this.$store.state.loanName,query:{deposit:this.goodsMsg.deposit,id:this.goodsMsg.id,loan:true},params:{ goodsList: this.goodsMsg} })
+            this.$store.commit("updateShowToast",false)
         }
     },
     computed:{

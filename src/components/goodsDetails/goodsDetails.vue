@@ -1,6 +1,6 @@
 <template>
     <div class="goods-details">
-        {{description}}
+        {{goodsDetails.note}}
     </div>
 </template>
 
@@ -13,11 +13,7 @@ export default {
         FlexboxItem
     },
     props:{
-        
-        description:{
-            default:`1、绿篱修剪机、高枝锯、高枝剪、打草机、割灌机、草坪修剪机等多款性能全球名列前茅的电动园林工具,
-                    2、一贝集团所有专业级电动园林工具均采用锂电池作为能源`
-        }
+        goodsDetails:Object
     },
     data(){
         return {

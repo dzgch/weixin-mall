@@ -1,13 +1,16 @@
 <template>
     <div class="judge">
         <flexbox orient="horizontal" class="c-judge-flex">
-            <flexbox-item v-for="k in judgeList" :key="k.text" class="c-center">
-                <div :class="k.textClass"><i :class="k.iconClass"></i><span>{{ k.text}}</span></div>
+            <flexbox-item v-for="(k,i) in judgeList" :key="k.text" class="c-center">
+                <div :class="k.textClass" @click="clickJudge(i)"><i :class="k.iconClass"></i><span>{{ k.text}}</span></div>
             </flexbox-item>
         </flexbox>
         <group gutter="0" class="c-judge-group">
-          <x-textarea v-model="xtextList.value" :name="xtextList.name" :show-counter="xtextList.showCounter" :placeholder="xtextList.placeholder"></x-textarea>
-          <flexbox orient="horizontal" class="c-judge-photo">
+          <x-textarea v-model="xtextList.value"
+           :name="xtextList.name" :show-counter="xtextList.showCounter" 
+           @on-change="clickText"
+           :placeholder="xtextList.placeholder"></x-textarea>
+          <!-- <flexbox orient="horizontal" class="c-judge-photo">
             <flexbox-item>
                 <div>
                     <div v-for="i in gridList" :key="i.text" class="c-goto-photo">
@@ -17,13 +20,14 @@
                 </div>
                 
             </flexbox-item>
-          </flexbox>
+          </flexbox> -->
         </group>
     </div>
 </template>
 
 <script>
 import { Flexbox, FlexboxItem,XTextarea,Group,Grid, GridItem   } from 'vux'
+import { isIP } from 'net';
 export default {
     name:"judge",
     components:{
@@ -44,7 +48,7 @@ export default {
             {
                 iconClass:["iconfont","iconzhongchaping"],
                 text:"中评",
-                textClass:["c-judge-status-1"]
+                textClass:["c-judge-status-2"]
             },
             {
                 iconClass:["iconfont","iconzhongchaping"],
@@ -59,15 +63,34 @@ export default {
             ,show_vertical_dividers:false
             ,gridList:[{
                 link:'/',
-                label:"添加照片",
+                label:"照片",
                 iconClass:["iconfont","iconxiangji"]
             },
             {
                 link:'/',
-                label:"添加视频",
+                label:"视频",
                 iconClass:["iconfont","iconshipin-m"]
             }]
         }
+    },
+    methods:{
+        clickJudge(val){
+            for(var i=0;i<this.judgeList.length;i++){
+                if(val==i){
+                let type=Object.assign(this.judgeList[i],{textClass:["c-judge-status-1"]})
+                    this.$set(this.judgeList,i,type)
+                }else{
+                let type=Object.assign(this.judgeList[i],{textClass:["c-judge-status-2"]})
+                    this.$set(this.judgeList,i,type)
+                }
+            }
+            this.$emit("on-judge",val)
+        },
+        clickText(val){
+            this.$emit("on-judgeText",val)
+        }
+    },
+    computed:{
     }
 }
 </script>
@@ -77,7 +100,7 @@ export default {
 @icon-size:35px;
 .judge{
     .c-judge-flex{
-        padding:20px 0;
+        padding:15px 0;
         background-color: @bg-color;
     }
     .c-judge-photo{
@@ -128,7 +151,8 @@ export default {
     .c-judge-group{
         background-color:@main-bg-color;
         .weui-textarea{
-            height:155px;
+            // height:155px;//有照片功能
+            height:265px;//无照片功能
             padding:20px 30px;
             background-color:@main-bg-color;
 

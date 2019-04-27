@@ -1,16 +1,16 @@
 <template>
-    <div class="loan-money">
+    <div class="buy-money">
         <div class="loan-cell">
-            <div class="loan-cell-title">交付租金：</div>
+            <div class="loan-cell-title">总金额：</div>
             <div class="loan-cell-money">{{money}}</div>
-            <div class="loan-cell-des">备注 : 租金仅供租赁机械</div>
+            <!-- <div class="loan-cell-des">备注 : 租金仅供租赁机械</div> -->
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name:"loanMoney",
+    name:"buyMoney",
     components:{
 
     },
@@ -27,7 +27,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.loan-money{
+.buy-money{
     .loan-cell{
         width: 659px;
 	height: 313px;

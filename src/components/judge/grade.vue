@@ -1,14 +1,14 @@
 <template>
     <div class="grade">
         <div class="c-grade c-left"><div><div class="c-circle"></div><span class="c-grade-title">评分</span></div></div>
-         <flexbox orient="vertical" class="c-grade-flex">
+         <flexbox orient="vertical" class="c-grade-flex" :gutter="0">
             <flexbox-item v-for="k in judgeList" :key="k.text" class="c-left c-boot">
-                <div :class="k.textClass">
+                <div>
                     <span class="c-grade-title">{{ k.text}}</span>
                     <!-- <i v-for="i in k.fillNum" :class="k.iconFillClass" @click="clickStar"></i>
                     <i v-for="i in k.strokeNum" :class="k.iconStrokeClass"></i> -->
                     
-                <rater v-model="starData" active-color="#ff4343" star="<i class='iconfont icontubiao_wuxing-'></i>"></rater>
+                <rater v-model="k.starData" active-color="#ff4343" star="<i class='iconfont icontubiao_wuxing-'></i>"></rater>
                 </div>
             </flexbox-item>
         </flexbox>
@@ -18,28 +18,16 @@
 <script>
 import { Flexbox, FlexboxItem ,Rater } from 'vux'
 let judgeList=[{
-                iconFillClass:["iconfont","icontubiao_wuxing-"],
-                iconStrokeClass:["iconfont","icontubiao_wuxing-1"],
-                fillNum:3,
-                strokeNum:2,
+                starData:0,
                 text:"描述相符",
-                textClass:["c-judge-status-1"]
             },
             {
-                iconFillClass:["iconfont","icontubiao_wuxing-"],
-                iconStrokeClass:["iconfont","icontubiao_wuxing-1"],
-                fillNum:3,
-                strokeNum:2,
+                starData:0,
                 text:"物流服务",
-                textClass:["c-judge-status-1"]
             },
             {
-                iconFillClass:["iconfont","icontubiao_wuxing-"],
-                iconStrokeClass:["iconfont","icontubiao_wuxing-1"],
-                fillNum:3,
-                strokeNum:2,
-                text:"服务态度",
-                textClass:["c-judge-status-2"]
+                starData:0,
+                text:"服务态度"
             }];
 export default {
     name:"grade",
@@ -51,12 +39,20 @@ export default {
     data(){
         return {
             judgeList:judgeList,
-            starData:1
+            starData:0
         }
     },
     methods:{
         clickStar(event){
             console.log(event);
+        }
+    },
+    watch:{
+        judgeList:{
+            handler:function(newval){
+                this.$emit("on-grade",newval)
+            },
+            deep:true
         }
     }
 }
@@ -76,10 +72,11 @@ export default {
         // color:#ff4343 !important;
         width: 35px !important;
 	height: 35px !important;
+	line-height: 35px !important;
     }
     .c-grade{
-            height:130px;
-            line-height:130px;
+            height:100px;
+            line-height:100px;
         .c-circle{
             height: 30px;
             width: 4px;

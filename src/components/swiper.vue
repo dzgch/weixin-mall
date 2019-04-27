@@ -28,9 +28,9 @@ const baseList = [{
   title: ''
 }, {
   url: 'javascript:',
-  img: require("@/assets/images/首页banner.png"), // 404
+  img: require("@/assets/images/首页banner.png"), 
   title: '',
-  fallbackImg: require("@/assets/images/首页banner.png")
+  fallbackImg: require("@/assets/images/首页banner.png")//404
 }]
 
 

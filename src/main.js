@@ -5,68 +5,36 @@ import App from './App'
 import router from './router/index.js'
 import FastClick from 'fastclick'
 import Vuex from 'vuex'
-import { setToken, getToken } from './libs/util'
+import { setToken, getToken,getInvitation,setInvitation,getCode,setCode } from './libs/util'
+import  { ToastPlugin } from 'vux'
+Vue.use(Vuex)
+Vue.use(ToastPlugin)
 // import api from './api/api'
 import store from './store/index.js'
 //移动端适配
 import 'lib-flexible/flexible.js'
-Vue.use(Vuex)
+
 // Vue.prototype.$api = api;//将axios挂载到Vue实例中的$ajax上面,在项目中的任何位置通过this.$api使用
 //点击事件优化
 Vue.config.productionTip = false
 FastClick.attach( document.body );
 
 require('es6-promise').polyfill()
+
+
+
 /* eslint-disable no-new */
 /**
  */
+// setToken("5O1554642125630")
+const token = getToken()
+console.log(token)
 let checkIsLoginGotologin = function(to, next) {
-  // isRelation 判断用户微信账户是否关联官网账户
-  // routeArr 是一些路由是不需要受监听的
-  // !res ? 已经授权 ：没有授权
-// isRelation().then(res => {
-//   if (routeArr.includes(to.path)) {
-//     !res ? next('index') : next();
-//   } else {
-//     // 没有授权且不是授权页                             // 当在授权的情况下是不允许访问login页面
-//     (res && to.path !== '/login') ? next('/login'): ((!res && to.path === '/login') ? next('index') : next())
-//   }
-// })
-}
-
-let getCodePullCode = async function(url) {
-  let mycode = url.substring(url.indexOf('code=') + 5, url.indexOf('state=') - 1);// 前台截取code
-  console.log(mycode);
-// selfStore.set('wechatCodeStr', mycode); // 存储code
-//传送给后台code
-// await axios
-//   .get("/home/WxSignature/getCode", {
-//     params: {
-//       code: mycode
-//     }
-//   })
-//   .then(res => {
-//     //需要登录
-//     var res = res.data;
-//     if (res && res.status === 1) {
-//       selfStore.set('openId', res.data);//本地存储Openid，也可以不存储。由后台调配
-
-//       location.href = `http://m.example.com/?a=1#${location.href.split('#')[1]}`; // 增加a=1 防止支付错误 防止前台死循环
-//     }
-//   });
-}
-
-/**
-* 全局路由
-* @DateTime 2019-04-13
-*/
-const LOGIN_PAGE_NAME = 'invitation_code'
-
-router.beforeEach((to, from, next) => {
-console.log("123")
-  const token = 123//getToken()
-  let isNotInvitation=store.state.isNotInvitation
-  
+ 
+  let isNotInvitation=store.state.user.invitation
+  if(to.name === "home"){
+    store.commit("changeFooter",0)
+  }
   if ( token && to.name !== LOGIN_PAGE_NAME ) {
     //已登录， 要跳转的页面不是填写邀请码页,
     if ( !isNotInvitation ){//未填写邀请码
@@ -76,10 +44,7 @@ console.log("123")
     } else {//已填写邀请码
       next()
     }
-  } else if ( !token ) {
-    // 未登陆
-    // 获取授权
-  } else if ( token && to.name === LOGIN_PAGE_NAME ) {
+  }else if ( token && to.name === LOGIN_PAGE_NAME ) {
     // 已登录且要跳转的页面是填写邀请码页,
     
     if ( isNotInvitation ){//已填写邀请码或无需邀请码
@@ -92,7 +57,70 @@ console.log("123")
   } else {
     next()
   }
-    
+}
+
+let getCodePullCode = async function(url,to,next) {
+  let mycode = url.substring(url.indexOf('code=') + 5, url.indexOf('state=') - 1);// 前台截取code
+  console.log(store);
+  store.dispatch("getSdkSign",{code:mycode,ip:"192.0.0.1"}).then(res=>{
+    location.href = `${URL}?a=1`;
+  })
+// selfStore.set('wechatCodeStr', mycode); // 存储code
+// 传送给后台code
+    // await axios
+    //   .get("/home/WxSignature/getCode", {
+    //     params: {
+    //       code: mycode
+    //     }
+    //   })
+    //   .then(res => {
+    //     //需要登录
+    //     var res = res.data;
+    //     if (res && res.status === 1) {
+    //       selfStore.set('openId', res.data);//本地存储Openid，也可以不存储。由后台调配
+
+    //       location.href = `http://m.example.com/?a=1#${location.href.split('#')[1]}`; // 增加a=1 防止支付错误 防止前台死循环
+    //     }
+    //   });
+}
+
+/**
+* 全局路由
+* @DateTime 2019-04-13
+*/
+const LOGIN_PAGE_NAME = 'invitation_code'
+let URL=''
+router.beforeEach((to, from, next) => {
+  // 判断用户有无填写邀请码，有则跳过邀请码页
+  // 代码。。。
+    // 未登陆
+    // 获取授权
+        let url = location.href;
+    // 同时判断'a=1' 和code= 防止前台死循环 
+    // wechatCode没有 发起授权
+    // if(url.indexOf('code=')<1)
+    // {
+    //   let code = url.substring(url.indexOf('code=') + 5, url.indexOf('state=') - 1);
+    //   setCode(code)
+    // }
+    //start
+    console.log(token)
+    if(!token && (url.indexOf('code=') < 1)){
+        let redirectUrl = window.location.href
+            redirectUrl = encodeURIComponent(redirectUrl)
+            URL=window.location.href
+            console.log(process.env)
+            const appid=process.env.APP_ID
+            // store.wx.dispatch("authorize","")
+            console.log(redirectUrl)
+            window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+        // 后台重定向页面，授权登录
+    }else{
+
+      (!(url.indexOf('code=') < 1)) ? getCodePullCode(url,to,next): checkIsLoginGotologin(to, next)
+       
+      }
+    //end
   //   if (process.env.NODE_ENV == 'production') {
   //   let url = location.href;
   //   // 同时判断'a=1' 和code= 防止前台死循环 
@@ -116,7 +144,7 @@ new Vue({
   el: '#app',
   router,
   store,
-  // components: { App },
-  // template: '<App/>',
-  render: h => h(App)
+  components: { App },
+  template: '<App/>'
+  // render: h => h(App)
 })

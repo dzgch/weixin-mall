@@ -1,6 +1,6 @@
 <template>
    <tabbar class="footer">
-      <tabbar-item v-for= "item in footerIcon" :key="item.name" :show-dot="item.show_dot" :selected="item.selected" :link="item.link" :badge="item.badge">
+      <tabbar-item v-for= "item in footerList" :key="item.name" :show-dot="item.show_dot" :selected="item.selected" :link="item.link" :badge="item.badge" @on-item-click="footerItem">
         <i slot="icon" :class="item.imgUrl"></i>
         <span slot="label">{{item.name}}</span>
       </tabbar-item>
@@ -8,6 +8,7 @@
 </template>
 <script>
 import { Tabbar, TabbarItem ,ViewBox} from 'vux'
+import { mapActions, mapMutations, mapState, mapGetters } from 'vuex'
 // import img1 from '../assets/images/icon_nav_button.png'
 // import img2 from '../assets/images/icon_nav_msg.png'
 // import img3 from '../assets/images/icon_nav_article.png'
@@ -21,36 +22,24 @@ export default {
   },
   data(){
     return {
-      footerIcon:[{
-        imgUrl:"iconfont iconhome"
-        ,name:'首页'
-        ,link:'/'
-        ,selected:true
-      },
-      {
-        imgUrl:"iconfont icongouwuche"
-        ,name:'商城'
-        ,show_dot:true
-        ,link:'/mall'
-      },
-      {
-        imgUrl:"iconfont icongongneng_fabuxuqiu"
-        ,name:'预约'
-        ,link:'/'
-        
-      },
-      {
-        imgUrl:"iconfont iconpeixunjihua"
-        ,name:'培训'
-        ,badge:""
-      },
-       {
-        imgUrl:"iconfont iconyonghu"
-        ,name:'我的'
-        ,badge:""
-        ,link:'/myself'
-      }]
     }
+  },
+  computed:{
+    ...mapState([
+      'footerList'
+    ]),
+  },
+  created() {
+    // this.handleChangeFooter(0)
+  },
+  methods:{
+    footerItem(index){
+      console.log(index)
+      this.handleChangeFooter(index)
+    },
+    ...mapActions([
+      'handleChangeFooter'
+    ])
   }
 }
 </script>

@@ -2,13 +2,13 @@
     <div class="order-judge c-line">
         <flexbox :gutter="gutter" align="flex-start">
             <flexbox-item :span="4/14">
-            <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+            <div class="c-img-main" :style="{backgroundImage:'url('+(goodsList.picurl||img_url)+')'}">
                 
             </div>
             </flexbox-item>
             <flexbox-item :span="10/14">
                 <div class="c-content">
-                    <div class="c-title">{{ title }}</div>
+                    <div class="c-title">{{ goodsList.name }}</div>
                 </div>
             </flexbox-item>
         </flexbox>
@@ -34,9 +34,7 @@ export default {
         img_url:{
             default:require("@_a/images/首页banner.png")
         },
-        title:{
-            default:"ELBE锂电采茶机"
-        }
+        goodsList:Object
     }
     
 }

@@ -2,24 +2,24 @@
     <div class="panel-for-loan">
         <flexbox :gutter="0" orient="horizontal" class="c-line">
             <flexbox-item :span="4/10">
-            <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+            <div class="c-img-main" :style="{backgroundImage:'url('+goodsList.picurl+')'}">
             </div>
             </flexbox-item>
             <flexbox-item :span="6/10">
                 <flexbox orient="vertical" class="c-flexbox-hot">
                     <flexbox-item>
                         <div class="c-content">
-                            <div class="c-title">{{ title }}</div>
-                            <div class="c-money-title">￥<span class="c-money">{{ money }}</span>&nbsp;/起</div>
+                            <div class="c-title">{{ goodsList.name }}</div>
+                            <div class="c-money-title">￥<span class="c-money">{{ (Number(goodsList.rentPrice)).toFixed(2) }}</span>&nbsp;/起</div>
                         </div>
                     </flexbox-item>
                     <flexbox-item class="c-left c-flexhot-footer">
-                        <button-c :type="btn_buy_type" :text="btn_buy_text" :style="style" @click.native="clickLoan"></button-c>
+                        <button-c type="primary" text="租赁" @click.native="clickLoan"></button-c>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
         </flexbox>
-        <load-alert></load-alert>
+     <load-alert  :money="goodsList.deposit" :goodsMsg="goodsList"></load-alert>
     </div>
 </template>
 
@@ -39,21 +39,11 @@ export default {
     },
     data(){
         return {
-            btn_buy_type: 'primary',
-            btn_buy_text:'租赁',
-            style:{}
         }
     },
     props:{
-        
-        img_url:{
-            default:require("@_a/images/首页banner.png")
-        },
-        title:{
-            default:"ELBE锂电采茶机"
-        },
-        money:{
-            default:1233
+        goodsList:{
+            type:[Object,Array]
         }
     },
     methods:{

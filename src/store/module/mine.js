@@ -10,6 +10,8 @@ const state = {
   ,typeTagType:'0'
   // 是否显示租赁弹出框
   ,showToast:false
+  // 订单状态
+  ,staList:['交易已取消','等待您的支付','已支付','待发货','待收货','待评价','交易完成']
 }
 
 const actions = {
@@ -23,8 +25,14 @@ const getters = {
   getOrderTagType(state){
     return state.orderTagType;
   },
+  getTypeTagType(state){
+    return state.typeTagType;
+  },
   getShowToast(state){
     return state.showToast;
+  },
+  getOrderState(state){
+    return state.staList;
   }
 }
 
@@ -34,6 +42,9 @@ const mutations = {
   },
   updateOrderTagType(state,index){
     state.orderTagType=index;
+  },
+  updateTypeTagType(state,index){
+    state.typeTagType=index;
   },
   updateShowToast(state,index){
     state.showToast=index;

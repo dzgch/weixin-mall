@@ -1,11 +1,16 @@
 import Vue from 'vue'
 import axios from 'axios'; // 引入axios
 import QS from 'qs'; // 引入qs模块，用来序列化post类型的数据
+import  { ToastPlugin,Toast,AlertPlugin  } from 'vux'
+import { setToken, getToken,getInvitation,setInvitation,getCode,setCode } from '../libs/util'
 
+Vue.use(Toast)
+Vue.use(ToastPlugin)
+Vue.use(AlertPlugin )
 var instance = axios.create({
     //  设置请求前置路径
     baseURL: process.env.API_ROOT,
-    timeout: 10000,
+    timeout: 20000,
     // 设置允许携带cookie
     withCredentials:false
   });
@@ -35,19 +40,38 @@ instance.interceptors.request.use(function (config) {
   // 添加响应拦截器
 instance.interceptors.response.use(function (response) {
     // 对响应数据做点什么
-  
-    /* 关闭loading S */
-    //endLoading()
-    /* 关闭loading E */
-  
-    return response
+    if(response.data.code<1){
+      if(response.data.code == -3){
+        Vue.$vux.alert.show({
+          title: '错误',
+          content: '登录过期，请重新登录',
+          buttonText:"重新登录",
+          onHide () {
+            setToken("")
+            setInvitation("")
+           window.location.href="/"
+          }
+        })
+      }
+      else{
+      Vue.$vux.toast.show({
+        text:response.data.msg,
+        time:2000,
+        type:'warn',
+        width:'2.7rem'
+      })
+    }
+      return false
+    }else{
+      return response
+    }
   }, function (error) {
     // 对响应错误做点什么
   
     /* 关闭loading S */
    // endLoading()
     /* 关闭loading E */
-  
+    console.log(error)
     return Promise.reject(error)
   })
 
@@ -59,12 +83,18 @@ instance.interceptors.response.use(function (response) {
         instance({
           method: 'get',
           url: url,
-          params: QS.stringify(params)
+          params: params
         }).then(response => {
           // 请求成功
           resolve(response.data)
         }).catch(err => {
           // 请求失败
+          Vue.$vux.toast.show({
+            text:"请求失败",
+            time:2000,
+            type:'warn',
+            width:'2.7rem'
+          })
           console.log('请求失败')
           reject(err)
         })
@@ -72,7 +102,7 @@ instance.interceptors.response.use(function (response) {
     },
     // post请求
     post (url, data) {
-      console.log(data)
+      console.log("post",data)
       return new Promise((resolve, reject) => {
         instance({
           method: 'post',
@@ -80,9 +110,26 @@ instance.interceptors.response.use(function (response) {
           data: data
         }).then(response => {
           // 请求成功
+          if(response)
           resolve(response.data)
         }).catch(err => {
           // 请求失败
+          Vue.$vux.toast.show({
+            text:"请求失败",
+            time:2000,
+            type:'warn',
+            width:'2.7rem'
+          })
+          // Vue.$vux.alert.show({
+          //   title: '错误提示',
+          //   content: '请求失败',
+          //   onShow () {
+          //     console.log('Plugin: I\'m showing')
+          //   },
+          //   onHide () {
+          //     console.log('Plugin: I\'m hiding')
+          //   }
+          // })
           console.log('请求失败')
           reject(err)
         })

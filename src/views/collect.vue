@@ -7,18 +7,22 @@
     </div>
     <div class="mall-cell">
       <flexbox orient="vertical" :gutter="0" wrap="wrap">
-        <flexbox-item v-for="k in 5" :key="k" class="c-mall-goods-p">
-          <panel-for-coll :isShow="isShow"></panel-for-coll>
+        <flexbox-item v-for="(k,i) in collectList" :key="i" class="c-mall-goods-p">
+          <panel-for-coll ref="panelColl" :isShow="isShow" :goodsList="k" :checked="checked"></panel-for-coll>
+          
         </flexbox-item>
+        <div v-show="collectList.length<=0" class="tip-nomessage">
+          暂无收藏品
+      </div>
       </flexbox>
     </div>
     <div class="mall-footer" v-show="isShow">
       <flexbox :gutter="0" wrap="wrap">
         <flexbox-item :span="2/3">
-            <check-icon :value.sync="checkedAll">全选</check-icon>
+            <!-- <check-icon :value.sync="checkedAll">全选</check-icon> -->
         </flexbox-item>
         <flexbox-item class="c-delete-flex">
-            <button-l text="删除" class="c-delete"></button-l>
+            <button-l text="删除" class="c-delete" @click.native="removeColl"></button-l>
         </flexbox-item>
       </flexbox>
     </div>
@@ -29,6 +33,7 @@ import { Flexbox, FlexboxItem,CheckIcon } from 'vux'
 import HeaderC from '@/components/header'
 import PanelForColl from '@/components/panel/panelForColl'
 import ButtonL from '@/components/basic/buttonL'
+import { mapActions, mapGetters, mapMutations } from 'vuex';
 export default {
     name:"new",
     components:{
@@ -43,17 +48,69 @@ export default {
         return {
           headerTitle:"我的收藏",
           isShow:false,
-          checkedAll:false,
-          headerRight:"管理"
+          headerRight:"管理",
+          collectList:[],
+          checked:false
         }
     },
-    created(){
+    mounted(){
+      this.getCollect()
     },
     methods: {
+      getCollect(){
+this.getcollect().then(res=>{
+        this.collectList=res
+      })
+      },
       clickManager(){
         this.isShow= !this.isShow;
         this.headerRight=this.isShow?"完成":"管理";
+        // 全选
+        this.setAllCheckColl(false)
+        this.setColldelListNone()
+        // 设置子组件不选
+        this.checked=false
+        for(var i=0;i<this.$refs.panelColl.length;i++){
+          this.$refs.panelColl[i].changeCheck()
+        }
+      },
+      ...mapActions([
+        'getcollect',
+        'getcollectRemove'
+      ]),
+      ...mapMutations([
+        'setAllCheckColl',
+        'setColldelListNone'
+      ]),
+      removeColl(){
+        let list=this.collectList
+        if(list.length<1){
+          this.$vux.toast.show({
+            text: '您还没有选择商品哦！',
+            time:2000,
+            type:'text',
+            width:'2.7rem'
+          })
+        }else {
+        this.getcollectRemove().then(res=>{
+          this.getCollect()
+          this.clickManager()
+        })
+        }
       }
+    },
+    computed:{
+      ...mapGetters([
+        'getAllCheckColl'
+      ]),
+      checkedAll:{
+        get(){
+          return this.getAllCheckColl
+        },
+        set(v){
+          this.setAllCheckColl(v)
+        }
+      },
     }
 }
 </script>

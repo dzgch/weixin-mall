@@ -4,25 +4,25 @@
       <header-c :title="headerTitle">
       </header-c>
     </div>
-    <div class="goods-panel">
-      <p-for-goods-details></p-for-goods-details>
-    </div>
-    <div class="goods-grade">
-      <div id="detailsTag">
-      <goods-details-tag :class="searchBarFixed == true ? 'isFixed' :''"></goods-details-tag>
+    <div class="mall-center">
+      <div class="goods-panel">
+        <p-for-goods-details :goodsDetails="goodsDetails"></p-for-goods-details>
       </div>
-      <goods-judge v-show="isShow==1"></goods-judge>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
-      <goods-details v-show="isShow==0"></goods-details>
+      <div class="goods-grade">
+        <div id="detailsTag">
+        <goods-details-tag :class="searchBarFixed == true ? 'isFixed' :''"></goods-details-tag>
+        </div>
+        <div v-show="isShow==1" v-for="(k,i) in ariseList" :key="i">
+        <goods-judge :ariseList="k"></goods-judge>
+        </div>
+        <div class="tip-nomessage" v-show="isShow==1&&ariseList.length<1">
+          暂无评价
+        </div>
+        <goods-details v-show="isShow==0"  :goodsDetails="goodsDetails"></goods-details>
+      </div>
     </div>
-    <div class="goods-footer">
-        <goods-details-footer></goods-details-footer>
+    <div class="mall-footer">
+        <goods-details-footer  class="goods-footer" :goodsDetails="goodsDetails" ></goods-details-footer>
     </div>
 </div>
 </template>
@@ -34,7 +34,7 @@ import goodsDetails from '@/components/goodsDetails/goodsDetails'
 import goodsDetailsFooter from '@/components/goodsDetails/goodsDetailsFooter'
 import goodsDetailsTag from '@/components/goodsDetails/goodsDetailsTag'
 import goodsJudge from '@/components/goodsDetails/goodsJudge'
-import { mapState,mapGetters } from 'vuex'
+import { mapState,mapGetters, mapActions } from 'vuex'
 export default {
     name:"goodsdetails",
     components:{
@@ -52,6 +52,9 @@ export default {
           headerTitle:"商品详情",
           offsetTop:0,
           searchBarFixed:false
+          ,ariseList:[],
+          id:this.$route.query.id,
+          goodsDetails:{}
         }
     },
     created(){
@@ -59,6 +62,7 @@ export default {
      
     mounted(){
       let self=this;
+      this.getShopData()
       document.querySelector("#vux_view_box_body").addEventListener('scroll', self.handleScroll,false)
     },
     destroyed () {
@@ -69,11 +73,30 @@ export default {
       handleScroll(){
         this.offsetTop= (document.querySelector('#detailsTag').offsetTop)- (document.querySelector(".mall-top").offsetHeight)
         this.searchBarFixed = (document.querySelector("#vux_view_box_body").scrollTop) >= this.offsetTop ?  true : false
-        console.log(this.offsetTop,document.querySelector("#vux_view_box_body").scrollTop)
-      }
+      },
+      ...mapActions([
+        'getappraise',
+        'getselectcommoditybyid'
+    ]),
+    getShopData(){
+      this.goodsDetails={
+          id:1,price:10,name:12,picurl:"http://localhost:8200/static/img/首页banner.2f7a7b0.png",
+          count:2,
+          deposit:20,
+          type:1,
+          rentPrice:2
+        }
+        this.getselectcommoditybyid(this.id).then(res=>{
+            console.log(res)
+            this.goodsDetails=res[0]
+        })
+        this.getappraise({string:this.id}).then(res=>{
+            console.log(res)
+            this.ariseList=res
+        })
+    }
     },
     computed:{
-     
       ...mapGetters({
         isShow:"getTagType"
       })
@@ -85,9 +108,15 @@ export default {
   .mall-top{
     background-color: @bg-color;
   }
+  .mall-center{
+
+  }
   .goods-panel{
     padding:0 25px;
     background-color: @bg-color;
+  }
+  .mall-footer{
+    height:114px;
   }
   .goods-footer{
         width: 100%;

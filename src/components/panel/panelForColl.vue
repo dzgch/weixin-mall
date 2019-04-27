@@ -28,16 +28,42 @@
             </flexbox-item>
         </flexbox> -->
         <div class="check-c" v-show="isShow">
-            <check-icon :value.sync="checked"></check-icon>
+            <check-icon :value.sync="checkedOne"
+             @click.native="getChecked(checkedOne)"
+             ></check-icon>
         </div>
-        <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+        <div class="c-img-main" @click="clickToDetails" :style="{backgroundImage:'url('+goodsList.picurl+')'}">
         </div>
         <div class="c-content">
-            <span class="c-title" @click="clickToDetails">{{title}}</a></span>
-            <div class="c-money-title">{{ sign }}<span class="c-money">{{ money }}</span>&nbsp;/起</div>
-            
-            <button-c :type="btn_buy_type" :text="btn_buy_text" :style="style"></button-c>
-            <button-c :type="btn_borrow_type" :text="btn_borrow_text" :style="style"></button-c>
+            <span class="c-title" @click="clickToDetails">{{goodsList.name}}</a></span>
+            <template v-if="isBuy&&!isLoan">
+                <div class="c-money-title-rent" @click="clickToDetails">
+                </div>
+                <div class="c-money-title" @click="clickToDetails">
+                        <span>购买：￥<span class="c-money">{{ (Number(goodsList.price)).toFixed(2)}}</span>/起
+                        </span>
+                    </div>
+            </template>
+            <template v-else-if="isLoan&&!isBuy">
+                <div class="c-money-title" @click="clickToDetails">
+                </div>
+                    <div class="c-money-title-rent" @click="clickToDetails">
+                        <span >租赁：￥<span class="c-money">{{ (Number(goodsList.rentPrice)).toFixed(2)}}</span>/起
+                        </span>
+                    </div>
+            </template>
+            <template v-else-if="isLoan&&isBuy">
+                <div class="c-money-title" @click="clickToDetails">
+                    <span >购买：￥<span class="c-money">{{ (Number(goodsList.price)).toFixed(2)}}</span>/起
+                    </span>
+                </div>
+                <div class="c-money-title-rent" @click="clickToDetails">
+                <span> 租赁：￥<span class="c-money">{{ (Number(goodsList.rentPrice)).toFixed(2)}}</span>/起
+                </span>
+                </div>
+            </template>
+            <button-by-buy  v-show="isBuy"  :goodsList="goodsList"></button-by-buy>
+            <button-by-loan v-show="isLoan" :goodsList="goodsList"></button-by-loan>
         </div>
     </div>
 </template>
@@ -46,58 +72,88 @@
 // 收藏管理图文
 import { Flexbox, FlexboxItem,CheckIcon } from 'vux'
 import ButtonC from '@/components/basic/buttonCL.vue'
-
+import ButtonByLoan from '@/components/basic/buttonByLoan.vue'
+import ButtonByBuy from '@/components/basic/buttonByBuy.vue'
+import {mapGetters, mapMutations} from 'vuex'
 export default {
     name:"PanelForColl",
     components:{ 
         Flexbox,
         FlexboxItem,
         ButtonC,
-        CheckIcon
+        CheckIcon,
+        ButtonByLoan,
+        ButtonByBuy
     },
     data(){
         return {
-            btn_buy_type: 'primary',
-            btn_borrow_type:'warn',
-            btn_buy_text:'立即购买',
-            btn_borrow_text:'租赁',
-            style:{},
-            checked:false
+            checkedOne:this.checked
         }
     },
     props:{
-        gutter:{
-            default:10
-        },
-        justify:{
-            default:"space-between"
-        },
-        orient:{
-            default:"horizontal"
-        },
-        img_url:{
-            default:require("@_a/images/首页banner.png")
-        },
-        title:{
-            default:"ELBE锂电采茶机"
-        },
-        sign:{
-            default:"￥"
-        },
-        money:{
-            default:1233
-        },
         isShow:{
             default:false
-        }
+        },
+        goodsList:{
+            type:Object
+        },
+         checked:{
+             type:Boolean
+         }
+    },
+    mounted(){
+        console.log("mounted")
     },
     methods:{
         clickToDetails(){
             this.$router.push({
-                path:this.$store.state.goodsDetailsPath
+                path:this.$store.state.goodsDetailsPath,
+                query:{
+                    id:this.goodsList.id
+                }
             })
+        },
+        ...mapMutations([
+            'setAllCheckColl',
+            'setColldelList',
+            'removeColldelList'
+        ]),
+        changeCheck(){
+            this.checkedOne=false
+        },
+        getChecked(val){
+            console.log(val)
+             if(val){
+                  this.setColldelList(this.goodsList.id)
+              }else{
+                  this.removeColldelList(this.goodsList.id)
+
+              }
+            //   this.checkedOne=!val
+          
         }
-    }
+    },
+    computed:{
+      ...mapGetters([
+        'getAllCheckColl',
+        'getCollDel',
+        'getCollList'
+      ]),
+        isLoan(){
+            return this.goodsList.type==3||this.goodsList.type==1
+        },
+        isBuy(){
+            return this.goodsList.type==3||this.goodsList.type==2
+        }
+    //   checkedOne:{
+    //       get(){
+    //       return this.checked
+    //       },
+    //       set(v){
+    //           console.log(v)
+    //       }
+    //   }
+    },
     
 }
 </script>
@@ -127,11 +183,11 @@ export default {
         display: inline-block;
         vertical-align: top;
         padding:20px 0 0 20px;
-        width:50%;
+        width:47%;
     }
-    .c-money-title{
-        padding:20px 0;
-        margin-top:0;
+    .c-money-title,.c-money-title-rent{
+        // padding:20px 0;
+        // margin-top:0;
     }
     .weui-btn + .weui-btn{
         margin-top:0;

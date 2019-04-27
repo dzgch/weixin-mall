@@ -6,9 +6,12 @@
     </div>
     <div class="mall-cell">
       <flexbox orient="vertical" :gutter="0" wrap="wrap">
-        <flexbox-item v-for="k in 5" :key="k" class="c-mall-goods-p">
-          <addr-show :isShow="isShow"></addr-show>
+        <flexbox-item v-for="k in data" :key="k.id" class="c-mall-goods-p">
+          <addr-show :isShow="isShow" :address="k" :isChoose="isChoose" @on-changeAddr="changeAddrShow"></addr-show>
         </flexbox-item>
+        <div v-show="data.length<=0" class="tip-nomessage">
+          暂无地址，请手动添加
+      </div>
       </flexbox>
     </div>
     <div class="mall-footer">
@@ -21,6 +24,7 @@ import { Flexbox, FlexboxItem,CheckIcon } from 'vux'
 import HeaderC from '@/components/header'
 import addrShow from '@/components/address/addrShow'
 import ButtonL from '@/components/basic/buttonL'
+import { mapActions } from 'vuex'
 export default {
     name:"addressC",
     components:{
@@ -35,21 +39,37 @@ export default {
         return {
           headerTitle:"收货地址",
           isShow:false,
+          isChoose:this.$route.query.isChoose,
+          data:[]
         }
     },
-    created(){
+    mounted(){
+      this.getAddress()
     },
     methods: {
+      ...mapActions([
+        'getaddressSelect',
+        'handleClearAddr',
+        ]),
+      getAddress(){
+        this.getaddressSelect().then(res=>{
+          this.data=res
+        })
+      },
       clickManager(){
         this.isShow= !this.isShow;
       },
       toNewAddr(){
-        console.log(this.$router);
-
+        this.handleClearAddr()
         this.$router.push({
-          name:"newAddress",
-          path:'/address/newaddress'
+          path:'/newaddress',
+          query:{
+            isAdd:true
+          }
         })
+      },
+      changeAddrShow(){
+        this.getAddress()
       }
     }
 }

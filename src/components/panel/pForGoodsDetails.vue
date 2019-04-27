@@ -2,7 +2,7 @@
     <div class="p-for-goods-details">
         <flexbox :gutter="0" orient="vertical" class="c-flexbox">
             <flexbox-item>
-            <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+            <div class="c-img-main" :style="{backgroundImage:'url('+goodsDetails.picurl+')'}">
                 
             </div>
             </flexbox-item>
@@ -10,25 +10,32 @@
                 <flexbox :justify="justify" :gutter="0" align="end">
                     <flexbox-item :span="3/4">
                         <div class="c-content">
-                            <div class="c-title">{{ title }}</div>
-                            <div class="c-money-goods"><span class="c-money">￥{{ money }}</span><span class="c-money-no">￥{{ no_money }}</span></div>
+                            <div class="c-title">{{ goodsDetails.name }}</div>
+                            
+                            <div class="c-money-goods" v-show="isBuy">
+                                <span class="c-money">购买：￥{{ (Number(goodsDetails.price)).toFixed(2) }}</span>
+                                <span class="c-money-no">￥{{ (Number(goodsDetails.price)).toFixed(2) }}</span>
+                            </div>
+                            <div class="c-money-goods" v-show="isLoan">
+                                <span class="c-money">租赁：￥{{ (Number(goodsDetails.rentPrice)).toFixed(2) }}</span>
+                            </div>
                         </div>
                     </flexbox-item>
-                    <flexbox-item :psan="1/4" class="c-right c-right-icon">
+                    <!-- <flexbox-item :psan="1/4" class="c-right c-right-icon">
                         <i class="iconfont iconfenxiang1"></i>
-                    </flexbox-item>
+                    </flexbox-item> -->
                 </flexbox>
             </flexbox-item>
             <flexbox-item>
                <flexbox :justify="justify" :gutter="0" >
-                    <flexbox-item class="c-left">
+                    <!-- <flexbox-item class="c-left">
                         <div class="c-cuxiao">
                             限时促销
                         </div>
                     </flexbox-item>
                     <flexbox-item class="c-right">
                         <span class="c-addr">{{addr}}</span>
-                    </flexbox-item>
+                    </flexbox-item> -->
                 </flexbox>
             </flexbox-item>
         </flexbox>
@@ -38,6 +45,7 @@
 <script>
 // 商品详情图文
 import { Flexbox, FlexboxItem } from 'vux'
+import { mapState } from 'vuex';
 
 export default {
     name:"PForGoodsDetails",
@@ -61,17 +69,14 @@ export default {
         img_url:{
             default:require("@_a/images/首页banner.png")
         },
-        title:{
-            default:"ELBE锂电采茶机ELBE锂电采茶机ELBE锂电采茶机ELBE锂电采茶机"
+        goodsDetails:Object
+    },
+    computed:{
+        isLoan(){
+            return this.goodsDetails.type==3||this.goodsDetails.type==1
         },
-        money:{
-            default:1233
-        },
-        no_money:{
-            default:1000
-        },
-        addr:{
-            default:"广州"
+        isBuy(){
+            return this.goodsDetails.type==3||this.goodsDetails.type==2
         }
     }
     

@@ -12,12 +12,12 @@
 import { Grid ,GridItem,GroupTitle } from 'vux'
 const baseList=[
     {
-        link:'/',
+        link:'/goods?type=2',
         label:"电动机械",
         img:require("@/assets/images/首页-电动机械.png")
     },
     {
-        link:'/',
+        link:'/goods?type=3',
         label:"园林药剂",
         img:require("@/assets/images/首页-飘绿药剂.png")
     },

@@ -1,19 +1,19 @@
 <template>
     <div class="panel-car c-line">
-        <div class="check-c" v-show="isShow">
-            <check-icon :value.sync="checked"></check-icon>
+        <div class="check-c">
+            <check-icon :value.sync="checkedOne"  @click.native="getChecked(checkedOne)"></check-icon>
         </div>
-        <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+        <div class="c-img-main"  @click="clickToDetails" :style="{backgroundImage:'url('+carList.picurl+')'}">
             
         </div>
-        <div class="c-content">
-            <div class="c-title">{{ title }}</div>
+        <div class="c-content"  @click="clickToDetails">
+            <div class="c-title">{{ carList.name }}</div>
             <div class="c-car-money">
-                <span class="c-money">￥{{ (Number(money)).toFixed(2) }}</span>
+                <span class="c-money">￥{{ (Number(carList.price)).toFixed(2) }}</span>
             </div>
         </div>
         <div class="car-num">
-                <inline-x-number :min="0" v-model="roundValue"></inline-x-number>
+                <inline-x-number :min="1" v-model="carList.count" @on-change="change"></inline-x-number>
         </div>
     </div>
 </template>
@@ -21,6 +21,7 @@
 <script>
 // 购物车图文
 import { Flexbox, FlexboxItem,Group,XNumber,InlineXNumber,CheckIcon } from 'vux'
+import { mapState, mapMutations,mapGetters, mapActions } from 'vuex';
 export default {
     name:"PanelForCar",
     components:{
@@ -31,33 +32,69 @@ export default {
         ,CheckIcon
     },
     props:{
-        gutter:{
-            default:0
-        },
-        orient:{
-            default:"horizontal"
-        },
-        img_url:{
-            default:require("@_a/images/首页banner.png")
-        },
-        title:{
-            default:"ELBE锂电采茶机"
-        },
-        
-        money:{
-            default:12.33
+        carList:{
+            type:[Object,Array]
         },
          isShow:{
             default:false
-        }
+        },
+         checked:{
+             type:Boolean
+         }
     },
     data(){
         return {
             sign:"￥",
-            roundValue:10,
-            checked:false
+            checkedOne:this.checked
         }
-    }
+    },
+    
+    methods:{
+        clickToDetails(){
+            this.$router.push({
+                path:this.$store.state.goodsDetailsPath,
+                query:{
+                    id:this.carList.commodityid
+                }
+            })
+        },
+        ...mapMutations([
+            'setShopdelList',
+            'removeShopdelList',
+            'setAllCheckCar'
+        ]),
+        ...mapActions([
+            'getshopcarUpdate'
+        ]),
+        change(val,old){
+            // 修改购物车数量
+            console.log(old)
+            this.getshopcarUpdate(this.carList).then(res=>{
+                this.$emit("on-update")
+            })
+        },
+         changeCheck(){
+            this.checkedOne=false
+        },
+        getChecked(val){
+            console.log(val)
+             if(val){
+                  this.setShopdelList(this.carList.carid)
+              }else{
+                  this.removeShopdelList(this.carList.carid)
+
+              }
+            //   this.checkedOne=!val
+          
+        }
+    },
+    computed:{
+        ...mapGetters([
+        'getShopDel',
+        'getShopcarList',
+        'getAllCheckCar'
+      ])
+    },
     
 }
 </script>
@@ -67,7 +104,8 @@ export default {
 
 @car-height:130px;
 .panel-car{
-    padding:15px 0;
+    margin-top:15px;
+    padding:30px 35px;
     background-color: @bg-color;
     position: relative;
     .check-c{
@@ -89,7 +127,7 @@ export default {
     .car-num{
         display: inline-block;
         position: absolute;
-        right: 10px;
+        right: 35px;
         vertical-align: middle;
         top: 62%;
         
@@ -97,33 +135,14 @@ export default {
             //     position: absolute;
             //     right:20px;
             // }
-        .vux-number-selector {
-            height: 35px;
-            font-size: 24px;
-            line-height: 24px;
-            color: #444;
-            border: solid 1px #999999;
-            & svg{
-                fill:#444;
-            }
-        }
-        a.vux-number-selector:first-child{
-            border-radius: 6px 0 0 6px;
-        }
-        a.vux-number-selector:last-child{
-            border-radius: 0px 6px 6px 0;
-        }
-        .vux-number-input{
-            .vux-number-selector;
-            border-left:none;
-            border-right:none;
-        }
+
     }
     .c-content{
         height:@car-height;
         position: relative;
         display: inline-block;
         vertical-align: top;
+        width:45%;
         .c-title{
             margin-top:15px;
             padding:0 10px;

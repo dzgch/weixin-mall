@@ -1,12 +1,12 @@
 <template>
     <div class="grade-footer">
-         <flexbox orient="vertical" :gutter="40">
+         <flexbox orient="vertical" :gutter="0">
             <flexbox-item class="c-right">
-               <check-icon :value.sync="value">匿名评价</check-icon>
+               <!-- <check-icon :value.sync="value">匿名评价</check-icon> -->
             </flexbox-item>
             <flexbox-item class="c-center">
                 <div class="footer-btn-width">
-                    <button-l text="提交评价"></button-l>
+                    <button-l text="提交评价" @click.native="send"></button-l>
                 </div>
             </flexbox-item>
         </flexbox>
@@ -29,6 +29,11 @@ export default {
         return {
             value:true
         }
+    },
+    methods:{
+        send(){
+            this.$emit("on-updateRaise")
+        }
     }
 }
 </script>
@@ -38,8 +43,9 @@ export default {
     background-color: @bg-color;
     padding:25px 0 45px;
     .footer-btn-width{
-        width:42%;
+        width:45%;
         margin:auto;
+        margin-top:15px;
     }
     .c-right{
         font-size: 26px;

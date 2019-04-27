@@ -1,8 +1,27 @@
 <template>
     <div class="sure-cell">
-        <group>
-            <cell v-for="k in list" :key="k.title" :title="k.title" :link="k.link" :is-link="k.is_link" :value="k.money">
-               
+        <group v-show="!shopcar">
+            <cell title="商品总额："  :is-link="false" :value="'￥'+(Number(goodsList.prePrice)).toFixed(2)">
+            </cell>
+            <!-- <cell title="优惠券" link="/" :is-link="true" :value="'￥'+(Number(goodsSureMsg.disPrice)).toFixed(2)">
+            </cell> -->
+            <!-- <cell title="运费："  :is-link="false" :value="'￥'+(Number((goodsSureMsg.fare||0))).toFixed(2)">
+            </cell> -->
+             <cell title="押金："  :is-link="false" :value="'￥'+(Number((goodsList.deposit||0))).toFixed(2)">
+            </cell>
+            <cell title="实付金额：" :is-link="false" :value="'￥'+(Number(goodsList.allMoney)).toFixed(2)">
+            </cell>
+        </group>
+        <group v-show="shopcar">
+            <cell title="商品总额："  :is-link="false" :value="'￥'+(Number(goodsList.prePrice)).toFixed(2)">
+            </cell>
+            <!-- <cell title="优惠券" link="/" :is-link="true" :value="'￥'+(Number(goodsSureMsg.disPrice)).toFixed(2)">
+            </cell> -->
+            <!-- <cell title="运费："  :is-link="false" :value="'￥'+(Number((goodsList.fare||0))).toFixed(2)">
+            </cell> -->
+            <cell title="押金："  :is-link="false" :value="'￥'+(Number((goodsList.deposit||0))).toFixed(2)">
+            </cell>
+            <cell title="实付金额：" :is-link="false" :value="'￥'+(Number(goodsList.allMoney)).toFixed(2)">
             </cell>
         </group>
     </div>
@@ -10,12 +29,7 @@
 
 <script>
 import { Cell, CellBox, CellFormPreview, Group, Badge } from 'vux'
-let list=[
-    {title:"商品总额：",is_link:false,money:"￥0.00"},
-    {title:"优惠券",is_link:true,link:"/",money:"￥0.00"},
-    {title:"运费：",is_link:false,money:"￥0.00"},
-    {title:"实付金额：",is_link:false,money:"￥0.00"}
-    ];
+import { mapState, mapMutations, mapActions } from 'vuex';
 export default {
     name:"sureCell",
     components:{
@@ -25,25 +39,30 @@ export default {
         Badge,
         CellFormPreview
     },
-    mounted () {
-    setTimeout(() => {
-      this.money = -1024
-    }, 2000)
-  },
-  props:{
+    computed:{
+        ...mapState([
+            'goodsSureMsg'
+        ]),
 
-  },
-  data(){
-      return {
-          money:null,
-          list:list
-      }
-  },
-   methods: {
-    onClick () {
-      console.log('on click')
+    },
+    mounted () {
+
+    },
+    props:{
+        goodsList:{
+            type:Object
+        },
+        shopcar:false
+    },
+    data(){
+        return {
+        }
+    },
+    methods: {
+        onClick () {
+        console.log('on click')
+        },
     }
-  }
 }
 </script>
 

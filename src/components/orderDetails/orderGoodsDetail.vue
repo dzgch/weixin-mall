@@ -10,26 +10,26 @@
         <div class="c-order-bd c-line">
         <flexbox :gutter="0" orient="horizontal"  align="end">
             <flexbox-item :span="3/10" style="position:relative">
-                <div class="c-img-main" :style="{backgroundImage:'url('+img_url+')'}">
+                <div class="c-img-main" :style="{backgroundImage:'url('+(orderDetails.url||img_url)+')'}">
                 </div>
             </flexbox-item>
             <flexbox-item :span="7/10" class="c-bd-flex"> 
                 <flexbox  orient="vertical" :gutter="0">
                     <flexbox-item class="c-left">
-                        <div class="c-title"> {{ title }}</div>
+                        <div class="c-title"> {{ orderDetails.commodityName }}</div>
                     </flexbox-item>
                     <flexbox-item class="c-left">
-                            <div class="c-money">￥<span>{{ money }}</span></div>
+                            <div class="c-money">￥<span>{{ Number(orderDetails.price).toFixed(2) }}</span></div>
                     </flexbox-item>
                     <flexbox-item class="c-left">
-                            <div class="c-num">数量：<span>{{ goods_num }}</span></div>
+                            <div class="c-num">数量：<span>{{ orderDetails.count }}</span></div>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
         </flexbox>
         </div>
         <div class="c-order-ft">
-            <button-l :text="btn_text" class="c-ft-btn-width"></button-l>
+            <button-l :text="btn_text" class="c-ft-btn-width" @click.native="askShop"></button-l>
         </div>
     </div>
 </template>
@@ -50,20 +50,21 @@ export default {
         img_url:{
             default:require("@_a/images/首页banner.png")
         },
-        goods_num:{
-            default:0
-        },
-         title:{
-            default:"ELBE锂电采茶机"
-        },
-        money:{
-            default:(10.00).toFixed(2)
-        }
+          orderDetails:Object
     },
     data(){
         return {
             btn_text:"联系客服",
             topTitle:"商品信息"
+        }
+    },
+    methods:{
+        askShop(){
+            this.$vux.toast.show({
+                text: '客服不在线哟',
+                type:"text",
+                time:2000
+            })
         }
     }
 }

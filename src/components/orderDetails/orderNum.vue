@@ -2,10 +2,10 @@
     <div class="order-num">
         <flexbox  orient="vertical" :gutter="0">
             <flexbox-item class="c-left">
-                <div class="c-order-num">订单编号 ：<span>{{ orderNum }}</span></div>
+                <div class="c-order-num">订单编号 ：<span>{{ orderDetails.orderNumber }}</span></div>
             </flexbox-item>
             <flexbox-item class="c-left">
-                <div class="c-order-time">下单时间 ：<span>{{ orderTime }}</span></div>
+                <div class="c-order-time">下单时间 ：<span>{{ time }}</span></div>
             </flexbox-item>
         </flexbox>
     </div>
@@ -14,7 +14,7 @@
 
 import { FormPreview,Flexbox, FlexboxItem  } from 'vux'
 import ButtonR from '@/components/basic/buttonR'
-
+import { getHour24 } from '@/libs/util'
 export default {
     name:"orderNum",
     components:{
@@ -24,15 +24,16 @@ export default {
         ButtonR
     },
     props:{
-        orderNum:{
-            default:"123123123123123"
-        },
-        orderTime:{
-            default:"2019/2/2 20:00"
-        }
+          orderDetails:Object
     },
     data(){
         return {
+            // time:getHour24(this.orderDetails.payOrdertime)
+        }
+    },
+    computed:{
+        time(){
+            return getHour24(this.orderDetails.payOrdertime)
         }
     }
 }

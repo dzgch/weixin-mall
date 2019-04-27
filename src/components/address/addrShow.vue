@@ -1,20 +1,25 @@
 <template>
     <div class="addr-show">
-        <div class="addr-show-top c-line">
+        <div class="addr-show-top c-line" @click="chooseAddr">
             <div class="addr-show-top-msg">
-                <span class="addr-show-top-name">{{msg.username}}</span>{{msg.userphone}}
+                <span class="addr-show-top-name">{{address.username}}</span>
+                {{address.phone}}
                 <div class="addr-show-top-status">
-                    <i class="iconfont iconicon" v-show="msg.checked"></i>
-                    <button type="button"  v-show="!msg.checked" class="addr-show-use">使用</button>
+                    <i class="iconfont iconicon" v-show="address.main==1"></i>
+                    <!-- <button type="button"  v-show="address.main<1" class="addr-show-use">使用</button> -->
                 </div>
             </div>
-            <div class="addr-show-top-addr">{{msg.useraddress}}</div>
+            <div class="addr-show-top-addr">{{address.addr}}</div>
         </div>
         <div class="addr-show-bottom">
-            <check-icon :value.sync="msg.checked" :class="{'check-status':msg.checked}">{{msg.checked?'已设为默认':'设为默认' }}</check-icon>
+            <check-icon :value.sync="address.main==1?true:false" 
+            :class="{'check-status':(address.main==1?true:false)}" 
+            @click.native="addrChange">
+            {{address.main==1?'已设为默认':'设为默认' }}
+            </check-icon>
             <div class="addr-show-bottom-operate">
-                <i class="iconfont iconbianji"></i>编辑
-                <i class="iconfont iconshanchu"></i>删除
+                <div style="display:inline-block" @click="updateAddr"><i class="iconfont iconbianji"></i>编辑</div>
+                <div style="display:inline-block" @click="removeAddr"><i class="iconfont iconshanchu"></i>删除</div>
             </div>
         </div>
     </div>
@@ -22,6 +27,8 @@
 <script>
 // 我的订单
 import { FormPreview,Flexbox, FlexboxItem ,CheckIcon } from 'vux'
+import { mapMutations, mapActions } from 'vuex';
+import { Stream } from 'stream';
 
 export default {
     name:"addrShow",
@@ -35,13 +42,59 @@ export default {
          isShow:{
             default:false
         },
-        msg:{
+        address:{
             default:()=>({
-                username:"wodeasd",
-                useraddress:"AAAAAAAAAAAAAAAAAAAAAAA",
-                userphone:"123123123123"
-                ,checked:true
+                username:String,
+                addr:String,
+                phone:String
+                ,main:[Boolean,String,Number]
             })
+        },
+        isChoose:{
+            type:[Boolean,String]
+        }
+    },
+    methods:{
+        ...mapActions([
+            'getaddressSetmain',
+            'getaddressRemove',
+            'handleOneAddress'
+        ]),
+        chooseAddr(){
+            if(this.isChoose){
+                this.$store.commit("changeAddress",this.address)
+                this.$router.go(-1)
+            }
+        },
+        // 删除地址
+        removeAddr(){
+            this.getaddressRemove(this.address.id).then(res=>{
+                this.$emit("on-changeAddr")
+            })
+        },
+        // 默认
+        addrChange(val){
+            console.log(val)
+            this.getaddressSetmain(this.address.id).then(res=>{
+                this.$emit("on-changeAddr")
+            })
+        },
+        updateAddr(){
+            this.handleOneAddress(this.address)
+            this.$router.push({
+                path:"/newAddress",
+                query:{
+                    isAdd:false
+                }
+            })
+        }
+    },
+    computed:{
+        ...mapMutations([
+            'changeAddress'
+        ]),
+        ismoren(){
+            return this.address.main==1?true:false
         }
     }
 }
@@ -64,6 +117,7 @@ export default {
             font-size: 32px;
             padding:10px 0;
             .addr-show-top-name{
+                margin-right:10px;
             }
             .addr-show-top-status{
                 display: inline-block;

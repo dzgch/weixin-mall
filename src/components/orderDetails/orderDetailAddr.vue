@@ -16,10 +16,11 @@
             <flexbox-item :span="8/9"> 
                 <flexbox  orient="vertical" :gutter="20">
                     <flexbox-item class="c-left">
-                        <div class="c-title c-content"> <span class="c-name">{{ name }}</span><span>{{ mobile }}</span></div>
+                        <div class="c-title c-content"> <span class="c-name">{{ orderDetails.ownerName }}</span>
+                        <span>{{ orderDetails.phone }}</span></div>
                     </flexbox-item>
                     <flexbox-item class="c-left">
-                        <div class="c-addr"><span>{{ address }}</span></div>
+                        <div class="c-addr"><span>{{ orderDetails.addr }}</span></div>
                     </flexbox-item>
                 </flexbox>
             </flexbox-item>
@@ -39,15 +40,7 @@ export default {
         FlexboxItem 
     },
     props:{
-        name:{
-            default:"XXXX"
-        },
-        address:{
-            default:"12312312312"
-        },
-        mobile:{
-            default:"12312312312"
-        }
+          orderDetails:Object
     },
     data(){
         return {

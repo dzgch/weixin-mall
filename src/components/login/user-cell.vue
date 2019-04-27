@@ -3,17 +3,17 @@
       <div class="cell-block" v-for="k in xinputList" :key="k.name">
         <i :class="k.icon"></i>
         <group :gutter="gutter" :label-align="labelAlign" class="cell-group">
-          <x-input  :title="k.title" :name="k.name" :placeholder="k.placeholder"></x-input>
+          <x-input  :title="k.title" :name="k.name" v-model="invitationCode" :placeholder="k.placeholder"></x-input>
         </group>
       </div>
-          <x-button class="c-btn" type="default" text="确认"  :mini="true"></x-button>
-      <div class='cell-no-invitation'><a @click="clickToHome">无邀请码，直接进入</a></div>
+          <x-button class="c-btn" type="default" text="确认" @click.native="getInvitation" :mini="true"></x-button>
+      <div class='cell-no-invitation' v-show="isInvitation"><a @click="clickToHome">无邀请码，直接进入</a></div>
     </div>
 </template>
 
 <script>
 import { Flexbox, FlexboxItem ,Group,XInput,XButton} from 'vux'
-import {mapActions} from 'vuex'
+import {mapActions, mapMutations, mapState} from 'vuex'
 export default {
     name:"user_cell",
     components:{
@@ -29,6 +29,9 @@ export default {
                         name:"code",
                         placeholder:"请填写邀请码"
                     }])
+        },
+        isInvitation:{
+          type:Boolean
         }
     },
     data(){
@@ -36,18 +39,26 @@ export default {
             
           labelAlign:"left"//为子元素设定统一对齐方式
           ,gutter:0
+          ,invitationCode:''
         }
     },
     methods:{
-      clickToHome(){
-        this.$router.push({
-          path:this.$store.state.homePath
-        });
-        this.handleIsNotInvitation(true)
-      },
       ...mapActions([
+        'getinvitation',
         'handleIsNotInvitation'
-      ])
+      ]),
+      getInvitation(){
+        this.getinvitation(this.invitationCode).then(res=>{
+          this.handleIsNotInvitation(this.invitationCode)
+          this.$router.push({
+            path:'/'
+          })
+        })
+      },
+      clickToHome(){
+        this.$emit("invitationChange",true)
+        
+      },
     }
 }
 </script>

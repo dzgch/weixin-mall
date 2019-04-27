@@ -5,6 +5,8 @@ import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
+export const INVITATION_KEY = 'invitation'
+export const CODE_KEY = 'code'
 
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
@@ -15,7 +17,29 @@ export const getToken = () => {
   if (token) return token
   else return false
 }
+export const setCode = (token) => {
+  Cookies.set(TOKEN_KEY, code, { expires: cookieExpires || 1 })
+}
 
+export const getCode = () => {
+  const code = Cookies.get(CODE_KEY)
+  if (code) return code
+  else return false
+}
+export const setInvitation = (invitation) => {
+  Cookies.set(INVITATION_KEY, invitation, { expires: cookieExpires || 1 })
+}
+
+export const getInvitation = () => {
+  const invitation = Cookies.get(INVITATION_KEY)
+  if (invitation) return invitation
+  else return false
+}
+// 修改时间格式
+export const getHour24 = (val) => {
+  let time=new Date(Number(val)).toLocaleString("chinese",{hour12:false})
+  return time
+}
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
 }
