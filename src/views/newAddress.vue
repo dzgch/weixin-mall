@@ -29,10 +29,16 @@ export default {
         return {
           headerTitle:"编辑收货地址",
           headerRight:"完成",
-          address:this.getOneAddress
+          address:{},
+          id:this.$route.query.id
         }
     },
     mounted(){
+      this.address=this.getOneAddress
+      if(this.getOneAddress.addr&&this.getOneAddress.addr.indexOf("-")>-1){
+      this.address.address1=this.getOneAddress.addr.split("-")[0].split(" ")
+      this.address.address2=this.getOneAddress.addr.split("-")[1]
+      }
       this.headerTitle=this.$route.query.isAdd?"新增收货地址":"修改收货地址"
     },
     methods: {

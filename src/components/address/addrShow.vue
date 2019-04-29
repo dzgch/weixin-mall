@@ -84,7 +84,8 @@ export default {
             this.$router.push({
                 path:"/newAddress",
                 query:{
-                    isAdd:false
+                    isAdd:false,
+                    id:this.address.id
                 }
             })
         }

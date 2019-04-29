@@ -108,6 +108,7 @@ const actions = {
     })
   },
   handleOneAddress({commit},data){
+    console.log(data)
     commit("setOneAddress",data)
   },
   handleAddrUser({commit},data){
@@ -133,6 +134,7 @@ const actions = {
 
 const getters = {
   getOneAddress(state){
+    console.log("one",state.oneAddress)
     return state.oneAddress
   },
   getAddrUser(state){

@@ -63,6 +63,7 @@ export default {
     mounted(){
       let self=this;
       this.getShopData()
+      this.$store.commit("updateTagType","0");
       document.querySelector("#vux_view_box_body").addEventListener('scroll', self.handleScroll,false)
     },
     destroyed () {
@@ -79,19 +80,10 @@ export default {
         'getselectcommoditybyid'
     ]),
     getShopData(){
-      this.goodsDetails={
-          id:1,price:10,name:12,picurl:"http://localhost:8200/static/img/首页banner.2f7a7b0.png",
-          count:2,
-          deposit:20,
-          type:1,
-          rentPrice:2
-        }
         this.getselectcommoditybyid(this.id).then(res=>{
-            console.log(res)
             this.goodsDetails=res[0]
         })
         this.getappraise({string:this.id}).then(res=>{
-            console.log(res)
             this.ariseList=res
         })
     }

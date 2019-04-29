@@ -99,7 +99,8 @@ export default {
         },
          checked:{
              type:Boolean
-         }
+         },
+         collect:false
     },
     mounted(){
         console.log("mounted")
@@ -109,7 +110,7 @@ export default {
             this.$router.push({
                 path:this.$store.state.goodsDetailsPath,
                 query:{
-                    id:this.goodsList.id
+                    id:this.collect?this.goodsList.commodityid:this.goodsList.id
                 }
             })
         },

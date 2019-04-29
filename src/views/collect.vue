@@ -8,7 +8,7 @@
     <div class="mall-cell">
       <flexbox orient="vertical" :gutter="0" wrap="wrap">
         <flexbox-item v-for="(k,i) in collectList" :key="i" class="c-mall-goods-p">
-          <panel-for-coll ref="panelColl" :isShow="isShow" :goodsList="k" :checked="checked"></panel-for-coll>
+          <panel-for-coll :collect="true" ref="panelColl" :isShow="isShow" :goodsList="k" :checked="checked"></panel-for-coll>
           
         </flexbox-item>
         <div v-show="collectList.length<=0" class="tip-nomessage">

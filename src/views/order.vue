@@ -54,11 +54,12 @@ export default {
     },
     mounted(){
       this.loadOrder()
-      document.querySelector("#vux_view_box_body").addEventListener('scroll', self.handleScroll,false)
+      let self=this;
+      // document.querySelector("#vux_view_box_body").addEventListener('scroll', self.handleScroll,false)
     },
     destroyed () {
       let self=this;
-       document.querySelector("#vux_view_box_body").removeEventListener('scroll',self.handleScroll,false); // 离开页面 关闭监听 不然会报错
+      //  document.querySelector("#vux_view_box_body").removeEventListener('scroll',self.handleScroll,false); // 离开页面 关闭监听 不然会报错
     },
     computed:{
       ...mapGetters([

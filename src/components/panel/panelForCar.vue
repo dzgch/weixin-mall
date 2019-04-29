@@ -9,8 +9,12 @@
         <div class="c-content"  @click="clickToDetails">
             <div class="c-title">{{ carList.name }}</div>
             <div class="c-car-money">
-                <span class="c-money">￥{{ (Number(carList.price)).toFixed(2) }}</span>
+                <span class="c-money">购买：￥{{ (Number(carList.price)).toFixed(2) }}</span>
             </div>
+            <!-- <div class="c-car-money-rent">
+                <span class="c-money">租赁：￥{{ (Number(carList.rentPrice)).toFixed(2)}}</span>
+               
+            </div> -->
         </div>
         <div class="car-num">
                 <inline-x-number :min="1" v-model="carList.count" @on-change="change"></inline-x-number>
@@ -102,7 +106,7 @@ export default {
 <style lang="less">
 @import '~vux/src/styles/1px.less';
 
-@car-height:130px;
+@car-height:150px;
 .panel-car{
     margin-top:15px;
     padding:30px 35px;
@@ -149,7 +153,7 @@ export default {
         }
         .c-car-money{
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             width:100%;
             .c-money{
                 	font-size: 26px;
@@ -158,7 +162,10 @@ export default {
             }
             
         }
-    
+        .c-car-money-rent{
+            .c-car-money;
+            bottom:0px;
+        }
     }
 }
 

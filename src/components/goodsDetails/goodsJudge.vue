@@ -6,7 +6,8 @@
                 <span class="c-name">{{ariseList.username}}</span>
             </flexbox-item>
             <flexbox-item class="c-left">
-                <div class="c-description">{{ariseList.text}}</div>
+                <div class="c-description">{{ariseList.text.length>0?ariseList.text:"未填写评价！"}}</div>
+                
             </flexbox-item>
             <flexbox-item class="c-left c-flex-three">
                 <!-- <div class="c-show" v-for="k in imgList">

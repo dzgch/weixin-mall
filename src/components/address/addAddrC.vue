@@ -85,7 +85,7 @@ export default {
             },
             xswitchList:{
                 title:"设为默认值",
-                valueMap:['0','1']
+                valueMap:[0,1]
             }
         }
     },

@@ -42,6 +42,21 @@ export default {
             starData:0
         }
     },
+    mounted(){
+        this.judgeList=[{
+                starData:0,
+                text:"描述相符",
+            },
+            {
+                starData:0,
+                text:"物流服务",
+            },
+            {
+                starData:0,
+                text:"服务态度"
+            }]
+        console.log(this.judgeList)
+    },
     methods:{
         clickStar(event){
             console.log(event);

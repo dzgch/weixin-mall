@@ -42,15 +42,21 @@ instance.interceptors.response.use(function (response) {
     // 对响应数据做点什么
     if(response.data.code<1){
       if(response.data.code == -3){
-        Vue.$vux.alert.show({
-          title: '错误',
-          content: '登录过期，请重新登录',
-          buttonText:"重新登录",
-          onHide () {
-            setToken("")
-            setInvitation("")
-           window.location.href="/"
-          }
+        // Vue.$vux.alert.show({
+        //   title: '错误',
+        //   content: '登录过期，请重新登录',
+        //   buttonText:"重新登录",
+        //   onHide () {
+        //     setToken("")
+        //     setInvitation("")
+        //    window.location.href="/"
+        //   }
+        // })
+        Vue.$vux.toast.show({
+          text:response.data.msg,
+          time:2000,
+          type:'warn',
+          width:'2.7rem'
         })
       }
       else{
